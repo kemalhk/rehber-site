@@ -58,17 +58,23 @@ def addNumber():
         ad = request.form['ad']
         soyad = request.form['soyad']
         telefon = request.form['telefon']
-        kayit = Rehber(ad=ad, soyad=soyad, telefon=telefon)
+        kayit = Rehber(ad=ad, soyad=soyad, numara=telefon)
         db.session.add(kayit)
         db.session.commit()
-        return render_template('addNumber.html', mesaj='Kayıt başarıyla eklendi.')
+        mesaj='Kayıt başarıyla eklendi.'
+        return render_template('addNumber.html', mesaj=mesaj)
     return render_template('addNumber.html')
 
 # Kayıt silme sayfası
 @app.route('/deleteNumber', methods=['GET', 'POST'])
 def deleteNumber():
-    users = Rehber.query.all()
-    return render_template('deleteNumber.html', users=users)
+    if request.method == 'POST':
+        id = request.form['id']
+        user = Rehber.query.get(id)
+        db.session.delete(user)
+        db.session.commit()
+        return render_template('deleteNumber.html', mesaj='Kayıt başarıyla silindi.')
+    return render_template('deleteNumber.html')
 
 # Kayıt listeleme sayfası
 @app.route('/list', methods=['GET', 'POST'])
