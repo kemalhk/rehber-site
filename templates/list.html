@@ -2,6 +2,69 @@
 <html>
 <head>
     <title>Listeleme</title>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .table-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        table {
+            width: 80%;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="text-center">Rehber</h1>
+            <p class="text-center"><a href="{{ url_for('list') }}">Kayıtları listele.</a></p>    
+            <p class="text-center"><a href="{{ url_for('addNumber') }}">Rehbere kayıt ekle.</a></p>
+            <p class="text-center"><a href="{{ url_for('update') }}">Rehberden kayıt güncelle.</a></p>
+            <p class="text-center"><a href="{{ url_for('deleteNumber') }}">Rehberden kayıt sil.</a></p>
+        </div>
+    </div>
+</div>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Ad</th>
+                    <th>Soyad</th>
+                    <th>Numara</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.ad }}</td>
+                    <td>{{ user.soyad }}</td>
+                    <td>{{ user.numara }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Add Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Listeleme</title>
 </head>
 <body>
     <h1>Kayıtlar</h1>
@@ -28,4 +91,4 @@
       </table>
     
 </body>
-</html>
+</html> -->

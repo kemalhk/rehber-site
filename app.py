@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from .models.user import User,db,Rehber
+import sys
 
 app = Flask(__name__)
 
@@ -13,7 +14,7 @@ db.init_app(app)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -88,10 +89,13 @@ def update():
     
     if request.method == 'POST':
         id=request.form['id']
+        
         #guncelle = Rehber.query.filter_by(Rehber.id==id).first()
         #guncelle = Rehber.query.filter_by(id==id).first()
+
+        # Güncellenen kaydı veritabanından al
         guncelle = Rehber.query.get(id)
-        if guncelle:  # Güncellenen kaydı veritabanından al
+        if guncelle:  
             guncelle.ad=request.form['ad']
             guncelle.soyad=request.form['soyad']
             guncelle.numara=request.form['telefon']

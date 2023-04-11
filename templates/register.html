@@ -1,22 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Register</title>
+    <title>Kayıt Ol</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Register</h1>
-    {% if error %}
-        <p>{{ error }}</p>
-    {% endif %}
-    <form method="POST">
-        <label>Username</label>
-        <input type="text" name="username" required>
-        <br>
-        <label>Password</label>
-        <input type="password" name="password" required>
-        <br>
-        <input type="submit" value="Register">
-    </form>
-    <a href="{{ url_for('login') }}">Hesabınız varsa giriş yapmak için tıklayın</a>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2 class="text-center">Kayıt Ol</h2>
+                {% if error %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                        {% endif %}
+                <form method="post">
+            <div class="form-group">
+                <label for="username">Kullanıcı Adı</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Şifre</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Kayıt Ol</button>
+            
+            <div class="text-center">
+                <p>Hesabınız varsa  <a href="{{ url_for('login') }}">Giriş Yap</a></p>
+            </div>
+        </form>
+    </div>
+    </div>
+    </div>
 </body>
 </html>

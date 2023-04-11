@@ -1,27 +1,42 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Yeni Kayıt Ekle</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<style>
+		.container {
+			margin-top: 100px;
+		}
+	</style>
 </head>
 <body>
-	<h1>Yeni Kayıt Ekle</h1>
+	<div class="container">
+		<h1 class="text-center">Yeni Kayıt Ekle</h1>
 
-    <p><a href="{{ url_for('rehber') }}">Anasayfaya dön.</a></p>    
-    <p><a href="{{ url_for('list') }}">Kayıtları listele.</a></p>
-    <p><a href="{{ url_for('update') }}">Rehberden kayıt güncelle.</a></p>
-    <p><a href="{{ url_for('deleteNumber') }}">Rehberden kayıt sil.</a></p>
+	    <div class="text-center">
+	    	<p><a href="{{ url_for('rehber') }}">Anasayfaya dön.</a></p>    
+	    	<p><a href="{{ url_for('list') }}">Kayıtları listele.</a></p>
+	    	<p><a href="{{ url_for('update') }}">Rehberden kayıt güncelle.</a></p>
+	    	<p><a href="{{ url_for('deleteNumber') }}">Rehberden kayıt sil.</a></p>
+	    </div>
 
-    
-
-	<form method="post" action="{{ url_for('addNumber') }}">
-		<label for="ad">Ad:</label>
-		<input type="text" id="ad" name="ad" required><br>
-		<label for="soyad">Soyad:</label>
-		<input type="text" id="soyad" name="soyad" required><br>
-		<label for="telefon">Telefon:</label>
-		<input type="text" id="telefon" name="telefon" required><br>
-		<input type="submit" value="Kaydet">
-	</form>
+	    
+		<form method="post" action="{{ url_for('addNumber') }}">
+			<div class="form-group">
+				<label for="ad">Ad:</label>
+				<input type="text" id="ad" name="ad" class="form-control" required>
+			</div>
+			<div class="form-group">
+				<label for="soyad">Soyad:</label>
+				<input type="text" id="soyad" name="soyad" class="form-control" required>
+				</div>
+			<div class="form-group">
+				<label for="telefon">Telefon:</label>
+				<input type="text" id="telefon" name="telefon" class="form-control" required>
+			</div>
+			<button type="submit" class="btn btn-primary">Kaydet</button>
+		</form>
+	</div>
 </body>
 </html>
