@@ -12,5 +12,18 @@
     <p><a href="{{ url_for('list') }}">Kayıtları listele.</a></p>
     <p><a href="{{ url_for('deleteNumber') }}">Rehberden kayıt sil.</a></p>
     
+
+    <form method="post" action="{{ url_for('addNumber') }}">
+        <label for="id">İd:</label>
+		<input type="text" id="id" name="id" required><br>
+		<label for="ad">Ad:</label>
+		<input type="text" id="ad" name="ad" required><br>
+		<label for="soyad">Soyad:</label>
+		<input type="text" id="soyad" name="soyad" required><br>
+		<label for="telefon">Telefon:</label>
+		<input type="text" id="telefon" name="telefon" required><br>
+		<input type="submit" value="Güncelle">
+	</form>
+
 </body>
 </html>

@@ -85,8 +85,21 @@ def list():
 # Kayıt güncelleme sayfası
 @app.route('/update', methods=['GET', 'POST'])
 def update():
-    users = Rehber.query.all()
-    return render_template('update.html', users=users)
+    
+    if request.method == 'POST':
+        id=request.form['id']
+        #guncelle = Rehber.query.filter_by(Rehber.id==id).first()
+        #guncelle = Rehber.query.filter_by(id==id).first()
+        guncelle = Rehber.query.get(id)
+        if guncelle:  # Güncellenen kaydı veritabanından al
+            guncelle.ad=request.form['ad']
+            guncelle.soyad=request.form['soyad']
+            guncelle.numara=request.form['telefon']
+            db.session.commit()
+            return render_template('update.html',mesaj='kayıt başarıyla güncellendi')
+        else:
+            return render_template('update.html', hata_mesaj='Kayıt bulunamadı')
+    return render_template('update.html')
     
 
 
