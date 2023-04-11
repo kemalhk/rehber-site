@@ -106,7 +106,7 @@ def update():
     return render_template('update.html')
     
 
-
+# kod olmadan vt oluşmyor sorulucak
 with app.app_context():
     db.create_all()
 
