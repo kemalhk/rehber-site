@@ -81,6 +81,23 @@ def deleteNumber():
 @app.route('/list', methods=['GET', 'POST'])
 def list():
     users = Rehber.query.all()
+    if request.method == 'POST':
+        if request.form['submit'] == 'Guncelle':
+            id=request.form['id']
+            guncelle = Rehber.query.get(id)
+            guncelle.ad=request.form['ad']
+            guncelle.soyad=request.form['soyad']
+            guncelle.numara=request.form['numara']
+            db.session.commit()
+            return redirect(url_for('list'))
+            #return render_template('list.html',mesaj='kayıt başarıyla güncellendi')
+        elif request.form['submit']=='Sil':
+            id=request.form['id']
+            user = Rehber.query.get(id)
+            db.session.delete(user)
+            db.session.commit()
+
+    users = Rehber.query.all()
     return render_template('list.html', users=users)
 
 # Kayıt güncelleme sayfası
@@ -89,10 +106,6 @@ def update():
     
     if request.method == 'POST':
         id=request.form['id']
-        
-        #guncelle = Rehber.query.filter_by(Rehber.id==id).first()
-        #guncelle = Rehber.query.filter_by(id==id).first()
-
         # Güncellenen kaydı veritabanından al
         guncelle = Rehber.query.get(id)
         if guncelle:  
@@ -100,10 +113,11 @@ def update():
             guncelle.soyad=request.form['soyad']
             guncelle.numara=request.form['telefon']
             db.session.commit()
-            return render_template('update.html',mesaj='kayıt başarıyla güncellendi')
+            return redirect(url_for('list'))
+            #return render_template('list.html',mesaj='kayıt başarıyla güncellendi')
         else:
-            return render_template('update.html', hata_mesaj='Kayıt bulunamadı')
-    return render_template('update.html')
+            return render_template('list.html', hata_mesaj='Kayıt bulunamadı')
+    return render_template('list.html')
     
 
 # kod olmadan vt oluşmyor sorulucak

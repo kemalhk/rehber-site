@@ -15,6 +15,10 @@
             width: 80%;
             margin: 0 auto;
         }
+        .form-control:focus {
+        outline: none !important;
+        box-shadow: none !important;
+        }
     </style>
 </head>
 <body>
@@ -30,6 +34,7 @@
     </div>
 </div>
     <div class="table-container">
+        <form method="post" >
         <table class="table">
             <thead>
                 <tr>
@@ -37,20 +42,26 @@
                     <th>Ad</th>
                     <th>Soyad</th>
                     <th>Numara</th>
+                    <th>Güncelle</th>
+                    <th>Sil</th>
+                    
                 </tr>
             </thead>
             <tbody>
                 {% for user in users %}
                 <tr>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.ad }}</td>
-                    <td>{{ user.soyad }}</td>
-                    <td>{{ user.numara }}</td>
-                    <td><a href="javascript:void(0)  " onclick="alertid('{{user.id}}')">tıkla</a></td>
+                    <td><input type="text" value="{{ user.id }}" id="id" name="id" class="form-control" style="width: auto;" readonly></td>
+                    <td><input type="text" value="{{ user.ad }}" id="ad" name="ad"class="form-control" ></td>
+                    <td><input type="text" value="{{ user.soyad }}" id="soyad" name="soyad" class="form-control"></td>
+                    <td><input type="text" value="{{ user.numara }}" id="numara" name="numara" class="form-control"></td>
+                    <td><a href="{{ url_for('update') }}"><button type="submit" value="Guncelle" class="btn btn-info">Güncelle</button></a></td>
+                    <td><a href="{{url_for('deleteNumber')}}"><button type="submit" value="Sil" class="btn btn-danger">Sil</button></a></td>
+
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        </form>
     </div>
     
     <!-- Add Bootstrap JS -->
