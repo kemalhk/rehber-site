@@ -34,7 +34,7 @@
     </div>
 </div>
     <div class="table-container">
-        <form method="post" >
+        <form method="post">
         <table class="table">
             <thead>
                 <tr>
@@ -54,8 +54,8 @@
                     <td><input type="text" value="{{ user.ad }}" id="ad" name="ad"class="form-control" ></td>
                     <td><input type="text" value="{{ user.soyad }}" id="soyad" name="soyad" class="form-control"></td>
                     <td><input type="text" value="{{ user.numara }}" id="numara" name="numara" class="form-control"></td>
-                    <td><a href="{{ url_for('update') }}"><button type="submit" value="Guncelle" class="btn btn-info">Güncelle</button></a></td>
-                    <td><a href="{{url_for('deleteNumber')}}"><button type="submit" value="Sil" class="btn btn-danger">Sil</button></a></td>
+                    <td><a href="#" onclick="editUser('{{ user.id }}', '{{ user.ad }}', '{{ user.soyad }}', '{{ user.numara }}')"><button type="button" class="btn btn-info">Güncelle</button></a></td>
+                    <td><a href="#" onclick="deleteUser('{{ user.id }}', '{{ user.ad }}', '{{ user.soyad }}', '{{ user.numara }}')"><button type="button" class="btn btn-danger">Sil</button></a></td>
 
                 </tr>
                 {% endfor %}
@@ -63,50 +63,98 @@
         </table>
         </form>
     </div>
-    
-    <!-- Add Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
 
-<script>
-    function alertid(id){
-        alert(id)
-    }
-</script>
+    <!-- Modal for Editing User Data -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                                        <h5 class="modal-title" id="editUserModalLabel">Kullanıcıyı Güncelle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{{ url_for('update') }}">
+                        <input type="hidden" id="editUserId" name="id">
+                        <div class="form-group">
+                            <label for="editUserAd">Id</label>
+                            <input type="text" class="form-control" id="editUserId" name="id" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="editUserAd">Ad</label>
+                            <input type="text" class="form-control" id="editUserAd" name="ad">
+                        </div>
+                        <div class="form-group">
+                            <label for="editUserSoyad">Soyad</label>
+                            <input type="text" class="form-control" id="editUserSoyad" name="soyad">
+                        </div>
+                        <div class="form-group">
+                            <label for="editUserNumara">Numara</label>
+                            <input type="text" class="form-control" id="editUserNumara" name="numara">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Güncelle</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for delete User Data -->
+    <div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteUserModalLabel">Kullanıcıyı Sil</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{{ url_for('deleteNumber') }}">
+                        <input type="hidden" id="deleteUserId" name="id">
+                        <div class="form-group">
+                            <label for="deleteUserAd">Ad</label>
+                            <input type="text" class="form-control" id="deleteUserAd" name="ad">
+                        </div>
+                        <div class="form-group">
+                            <label for="deleteUserSoyad">Soyad</label>
+                            <input type="text" class="form-control" id="deleteUserSoyad" name="soyad">
+                        </div>
+                        <div class="form-group">
+                            <label for="deleteUserNumara">Numara</label>
+                            <input type="text" class="form-control" id="deleteUserNumara" name="numara">
+                        </div>
+                        <button type="submit" class="btn btn-danger">Sil</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Add Bootstrap and jQuery JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.9/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Script for Editing User Data in Modal -->
+    <script>
+        function editUser(id, ad, soyad, numara) {
+            document.getElementById('editUserId').value = id;
+            document.getElementById('editUserAd').value = ad;
+            document.getElementById('editUserSoyad').value = soyad;
+            document.getElementById('editUserNumara').value = numara;
+            $('#editUserModal').modal('show');
+        }
+        function deleteUser(id, ad, soyad, numara) {
+            document.getElementById('deleteUserId').value = id;
+            document.getElementById('deleteUserAd').value = ad;
+            document.getElementById('deleteUserSoyad').value = soyad;
+            document.getElementById('deleteUserNumara').value = numara;
+            $('#deleteUserModal').modal('show');
+        }
+    </script>
+</body>
 </html>
 
-
-
-<!-- <!DOCTYPE html>
-<html>
-<head>
-    <title>Listeleme</title>
-</head>
-<body>
-    <h1>Kayıtlar</h1>
-
-    <p><a href="{{ url_for('rehber') }}">Anasayfaya dön.</a></p>    
-    <p><a href="{{ url_for('addNumber') }}">Rehbere kayıt ekle.</a></p>
-    <p><a href="{{ url_for('update') }}">Rehberden kayıt güncelle.</a></p>
-    <p><a href="{{ url_for('deleteNumber') }}">Rehberden kayıt sil.</a></p>
-    <table>
-        <tr>
-          <th>Id</th>
-          <th>Ad</th>
-          <th>Soyad</th>
-          <th>Numara</th>
-        </tr>
-        {% for user in users %}
-          <tr>
-            <td>{{ user.id }}</td>
-            <td>{{ user.ad }}</td>
-            <td>{{ user.soyad }}</td>
-            <td>{{ user.numara }}</td>
-          </tr>
-        {% endfor %}
-      </table>
-    
-</body>
-</html> -->
+                   
