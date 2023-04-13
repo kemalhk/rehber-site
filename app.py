@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for,abort
 from flask_sqlalchemy import SQLAlchemy
 from .models.user import User,db,Rehber
-import sys
+from flask_login import LoginManager,login_required,login_user,current_user,logout_user
+from http import HTTPStatus
+
 
 app = Flask(__name__)
 
@@ -10,6 +12,28 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'secret-key'
 db.init_app(app)
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "index"
+
+@login_manager.user_loader
+def user_loader(id):
+    """Given *user_id*, return the associated User object.
+    :param unicode user_id: user_id (email) user to retrieve
+    """
+    return User.query.get(id)
+
+
+@app.route("/logout", methods=["GET", "POST"])
+@login_required
+def logout():
+    """Logout the current user."""
+    user = current_user
+    user.authenticated = False
+    db.session.add(user)
+    db.session.commit()
+    logout_user()
+    return render_template("login.html")
 
 
 @app.route('/')
@@ -40,7 +64,8 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(username=username, password=password).first()
         if user is not None:
-            return redirect(url_for('rehber'))
+            login_user(user, remember=True)
+            return redirect(url_for('list'))
         else:
             error = 'Kullanıcı adı veya şifre hatalı.'
             return render_template('login.html', error=error)
@@ -49,11 +74,13 @@ def login():
 
 #giriş yaptıkdan sonraki sayfa
 @app.route('/rehber', methods=['GET', 'POST'])
+@login_required
 def rehber():
     return render_template('rehber.html')
 
 
 @app.route('/addNumber', methods=['GET', 'POST'])
+@login_required
 def addNumber():
     if request.method == 'POST':
         ad = request.form['ad']
@@ -68,6 +95,7 @@ def addNumber():
 
 # Kayıt silme sayfası
 @app.route('/deleteNumber', methods=['GET', 'POST'])
+@login_required
 def deleteNumber():
     if request.method == 'POST':
         id = request.form['id']
@@ -79,6 +107,7 @@ def deleteNumber():
 
 # Kayıt listeleme sayfası
 @app.route('/list', methods=['GET', 'POST'])
+@login_required
 def list():
     users = Rehber.query.all()
     if request.method == 'POST':
@@ -124,6 +153,7 @@ def update():
 
  # Kayıt güncelleme sayfası
 @app.route('/update', methods=['GET', 'POST'])
+@login_required
 def update():
     
     if request.method == 'POST':
