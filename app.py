@@ -84,12 +84,6 @@ def login():
     return render_template("login.html")
 
 
-# giriş yaptıkdan sonraki sayfa
-@app.route("/rehber", methods=["GET", "POST"])
-def rehber():
-    return render_template("rehber.html")
-
-
 @app.route("/addNumber", methods=["GET", "POST"])
 @login_required
 def addNumber():
@@ -103,7 +97,7 @@ def addNumber():
         mesaj = "Kayıt başarıyla eklendi."
         return redirect(url_for("list"))
         # return render_template("addNumber.html", mesaj=mesaj)
-    return render_template("addNumber.html")
+    return render_template("list.html")
 
 
 # Kayıt silme sayfası
