@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, abort
 from flask_sqlalchemy import SQLAlchemy
 from .models.user import User, db, Rehber
+from http import HTTPStatus
 from flask_login import (
     LoginManager,
     login_required,
@@ -18,9 +19,36 @@ app.config["SECRET_KEY"] = "secret-key"
 db.init_app(app)
 
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "index"
+
+
 @app.route("/")
 def index():
     return render_template("login.html")
+
+
+@app.route("/logout", methods=["GET", "POST"])
+@login_required
+def logout():
+    """Logout the current user."""
+    user = current_user
+    user.authenticated = False
+    db.session.add(user)
+    db.session.commit()
+    logout_user()
+    return render_template("login.html")
+
+
+@login_manager.user_loader
+def user_loader(id):
+    """Given *user_id*, return the associated User object.
+
+    :param unicode user_id: user_id (email) user to retrieve
+
+    """
+    return User.query.get(id)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -48,6 +76,7 @@ def login():
         password = request.form["password"]
         user = User.query.filter_by(username=username, password=password).first()
         if user is not None:
+            login_user(user, remember=True)
             return redirect(url_for("list"))
         else:
             error = "Kullanıcı adı veya şifre hatalı."
@@ -62,6 +91,7 @@ def rehber():
 
 
 @app.route("/addNumber", methods=["GET", "POST"])
+@login_required
 def addNumber():
     if request.method == "POST":
         ad = request.form["ad"]
@@ -78,6 +108,7 @@ def addNumber():
 
 # Kayıt silme sayfası
 @app.route("/deleteNumber", methods=["GET", "POST"])
+@login_required
 def deleteNumber():
     if request.method == "POST":
         id = request.form["id"]
@@ -90,6 +121,7 @@ def deleteNumber():
 
 # Kayıt listeleme sayfası
 @app.route("/list", methods=["GET", "POST"])
+@login_required
 def list():
     users = Rehber.query.all()
 
@@ -120,6 +152,7 @@ def update():
 
 # Kayıt güncelleme sayfası
 @app.route("/update", methods=["GET", "POST"])
+@login_required
 def update():
     if request.method == "POST":
         id = request.form["id"]
