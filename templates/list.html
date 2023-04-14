@@ -60,17 +60,24 @@
                     <tr>
                         <td><input type="text" value="{{ user.id }}" id="id" name="id" class="form-control"
                                 style="width: auto;" readonly></td>
-                        <td><input type="text" value="{{ user.ad }}" id="ad" name="ad" class="form-control"></td>
-                        <td><input type="text" value="{{ user.soyad }}" id="soyad" name="soyad" class="form-control">
+                        <td><input type="text" value="{{ user.ad }}" id="ad" name="ad" class="form-control" readonly>
                         </td>
-                        <td><input type="text" value="{{ user.numara }}" id="numara" name="numara" class="form-control">
+                        <td><input type="text" value="{{ user.soyad }}" id="soyad" name="soyad" class="form-control"
+                                readonly>
                         </td>
+                        <td><input type="text" value="{{ user.numara }}" id="numara" name="numara" class="form-control"
+                                readonly>
+                        </td>
+
                         <td><a href="#"
                                 onclick="editUser('{{ user.id }}', '{{ user.ad }}', '{{ user.soyad }}', '{{ user.numara }}')"><button
                                     type="button" class="btn btn-info">Güncelle</button></a></td>
                         <td><a href="#"
                                 onclick="deleteUser('{{ user.id }}', '{{ user.ad }}', '{{ user.soyad }}', '{{ user.numara }}')"><button
                                     type="button" class="btn btn-danger">Sil</button></a></td>
+                        <td><a href="#"
+                                onclick="addMail('{{ user.id }}', '{{ user.ad }}', '{{ user.soyad }}', '{{ user.numara }}')"><button
+                                    type="button" class="btn btn-success">Mail Ekle</button></a></td>
 
                     </tr>
                     {% endfor %}
@@ -105,10 +112,6 @@
                 <div class="modal-body">
                     <form method="post" action="{{ url_for('update') }}">
                         <input type="hidden" id="editUserId" name="id">
-                        <!-- <div class="form-group">
-                            <label for="editUserAd">Id</label>
-                            <input type="text" class="form-control" id="editUserId" name="id" readonly>
-                        </div> -->
                         <div class="form-group">
                             <label for="editUserAd">Ad</label>
                             <input type="text" class="form-control" id="editUserAd" name="ad">
@@ -195,6 +198,31 @@
         </div>
     </div>
 
+    <!-- Modal for insert mail Data -->
+    <div class="modal fade" id="addMailModal" tabindex="-1" role="dialog" aria-labelledby="addMailModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addMailModalLabel">Mai Adresi Ekle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{{ url_for('add_mail') }}">
+                        <input type="hidden" id="rehber_id" name="id">
+                        <div class="form-group">
+                            <label for="addMail">Mail</label>
+                            <input type="text" class="form-control" id="addMail" name="mail">
+                        </div>
+                        <button type="submit" class="btn btn-success">Kayıt Et</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
 
@@ -221,11 +249,14 @@
         }
         function addUser(ad, soyad, numara) {
 
-            /* document.getElementById('addUserAd').value = ad;
-            document.getElementById('addUserSoyad').value = soyad;
-            document.getElementById('addUserNumara').value = numara; */
             $('#addUserModal').modal('show');
-        } 
+        }
+        function addMail(rehber_id, mail) {
+            document.getElementById('rehber_id').value = rehber_id;
+
+            $('#addMailModal').modal('show');
+        }
+
     </script>
 </body>
 

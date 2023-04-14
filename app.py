@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, abort
 from flask_sqlalchemy import SQLAlchemy
-from .models.user import User, db, Rehber
+from .models.user import User, db, Rehber, Adres
 from flask_paginate import Pagination, get_page_parameter, get_page_args
 from http import HTTPStatus
 import math
@@ -143,28 +143,6 @@ def list():
     )
 
 
-""" # Kayıt güncelleme sayfası
-@app.route("/update", methods=["GET", "POST"])
-def update():
-    if request.method == "POST":
-        if request.form["submit"] == "Guncelle":
-            id = request.form["id"]
-            guncelle = Rehber.query.get(id)
-            guncelle.ad = request.form["ad"]
-            guncelle.soyad = request.form["soyad"]
-            guncelle.numara = request.form["numara"]
-            db.session.commit()
-            return redirect(url_for("list"))
-            # return render_template('list.html',mesaj='kayıt başarıyla güncellendi')
-        elif request.form["submit"] == "Sil":
-            id = request.form["id"]
-            user = Rehber.query.get(id)
-            db.session.delete(user)
-            db.session.commit()
-    users = Rehber.query.all()
-    return render_template("list.html", users=users) """
-
-
 # Kayıt güncelleme sayfası
 @app.route("/update", methods=["GET", "POST"])
 @login_required
@@ -183,6 +161,19 @@ def update():
         else:
             return render_template("list.html", hata_mesaj="Kayıt bulunamadı")
     return render_template("list.html")
+
+
+@app.route("/add_mail", methods=["POST"])
+def add_mail():
+    id = request.form["id"]
+    if request.method == "POST":
+        mail = request.form["mail"]
+        rehber_id = request.form["id"]
+        yeni_mail = Adres(mail=mail, rehber_id=rehber_id)
+        db.session.add(yeni_mail)
+        db.session.commit()
+        return redirect(url_for("list"))
+    return redirect(url_for("list"))
 
 
 # kod olmadan vt oluşmyor sorulucak
