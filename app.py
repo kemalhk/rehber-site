@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, abort
 from flask_sqlalchemy import SQLAlchemy
 from .models.user import User, db, Rehber
-from flask_paginate import Pagination, get_page_parameter
+from flask_paginate import Pagination, get_page_parameter, get_page_args
 from http import HTTPStatus
+import math
 
 from flask_login import (
     LoginManager,
@@ -121,7 +122,25 @@ def deleteNumber():
 def list():
     users = Rehber.query.all()
 
-    return render_template("list.html", users=users)
+    # sayfalama islemi
+    sayfa_numarasi = request.args.get(
+        "sayfa_numarasi", 1, type=int
+    )  # URL'den sayfa numarasını al, varsayılan olarak 1
+    sayfa_basi_oge_sayisi = 3
+    offset = (sayfa_numarasi - 1) * sayfa_basi_oge_sayisi
+    limit = sayfa_basi_oge_sayisi
+    users = Rehber.query.offset(offset).limit(limit).all()  #  sayfalara böl
+    toplam_oge_sayisi = Rehber.query.count()  # toplam kayıtlar
+    toplam_sayfa_sayisi = int(
+        math.ceil(toplam_oge_sayisi / sayfa_basi_oge_sayisi)
+    )  # Toplam sayfa sayısını hesapla
+
+    return render_template(
+        "list.html",
+        users=users,
+        toplam_sayfa_sayisi=toplam_sayfa_sayisi,
+        sayfa_numarasi=sayfa_numarasi,
+    )
 
 
 """ # Kayıt güncelleme sayfası

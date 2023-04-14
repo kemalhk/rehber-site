@@ -76,6 +76,18 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <hr>
+            <nav>
+                <ul>
+                    {% if sayfa_numarasi > 1 %}
+                    <li><a href="{{ url_for('list', sayfa_numarasi=sayfa_numarasi-1) }}">Önceki</a></li>
+                    {% endif %}
+                    {% if toplam_sayfa_sayisi > sayfa_numarasi %}
+                    <li><a href="{{ url_for('list', sayfa_numarasi=sayfa_numarasi+1) }}">Sonraki</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+
         </form>
     </div>
 
@@ -182,6 +194,9 @@
             </div>
         </div>
     </div>
+
+
+
 
 
     <!-- Add Bootstrap and jQuery JS -->
