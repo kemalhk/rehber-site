@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import DeclarativeBase, relationship
 
 
 db = SQLAlchemy()
@@ -32,3 +33,4 @@ class Rehber(db.Model):
     ad = db.Column(db.String(50), nullable=False)
     soyad = db.Column(db.String(50), nullable=False)
     numara = db.Column(db.String(50), unique=True, nullable=False)
+    # adresses = db.relationship("Adres", backref="Rehber", lazy=True)
