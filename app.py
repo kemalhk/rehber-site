@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, abort
 from flask_sqlalchemy import SQLAlchemy
 from .models.user import User, db, Rehber
+from flask_paginate import Pagination, get_page_parameter
 from http import HTTPStatus
+
 from flask_login import (
     LoginManager,
     login_required,
