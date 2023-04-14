@@ -50,8 +50,10 @@
                         <th>Ad</th>
                         <th>Soyad</th>
                         <th>Numara</th>
+                        <th>Mail</th>
                         <th>Güncelle</th>
                         <th>Sil</th>
+                        <th>Mail adresi ekle</th>
 
                     </tr>
                 </thead>
@@ -67,6 +69,14 @@
                         </td>
                         <td><input type="text" value="{{ user.numara }}" id="numara" name="numara" class="form-control"
                                 readonly>
+                        </td>
+                        <td>
+
+                            <select class="form-select" aria-label="Default select example">
+                                {% for adress in user.adresses %}
+                                <option value="{{ adress.mail }}">{{ adress.mail }}</option>
+                                {% endfor %}
+                            </select>
                         </td>
 
                         <td><a href="#"

@@ -54,6 +54,7 @@ def user_loader(id):
     return User.query.get(id)
 
 
+# kayıt ol sayfası
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -72,6 +73,7 @@ def register():
     return render_template("register.html")
 
 
+# giriş sayfası
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -87,6 +89,7 @@ def login():
     return render_template("login.html")
 
 
+# telefon numarası ekleme
 @app.route("/addNumber", methods=["GET", "POST"])
 @login_required
 def addNumber():
@@ -121,6 +124,7 @@ def deleteNumber():
 @login_required
 def list():
     users = Rehber.query.all()
+    addresses = Adres.query.all()
 
     # sayfalama islemi
     sayfa_numarasi = request.args.get(
@@ -140,6 +144,7 @@ def list():
         users=users,
         toplam_sayfa_sayisi=toplam_sayfa_sayisi,
         sayfa_numarasi=sayfa_numarasi,
+        addresses=addresses,
     )
 
 
@@ -163,16 +168,23 @@ def update():
     return render_template("list.html")
 
 
+# mail ekleme
 @app.route("/add_mail", methods=["POST"])
 def add_mail():
-    id = request.form["id"]
+    yeni_mail = request.form["mail"]
     if request.method == "POST":
-        mail = request.form["mail"]
-        rehber_id = request.form["id"]
-        yeni_mail = Adres(mail=mail, rehber_id=rehber_id)
-        db.session.add(yeni_mail)
-        db.session.commit()
-        return redirect(url_for("list"))
+        # tekrarlanan kayıt engelleme
+        user = Adres.query.filter_by(mail=yeni_mail).first()
+        if user is None:
+            mail = request.form["mail"]
+            rehber_id = request.form["id"]
+            yeni_mail = Adres(mail=mail, rehber_id=rehber_id)
+            db.session.add(yeni_mail)
+            db.session.commit()
+            return redirect(url_for("list"))
+        else:
+            error = "Mail adresi kayıtlı"
+            return render_template("list.html", error=error)
     return redirect(url_for("list"))
 
 
