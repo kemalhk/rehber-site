@@ -1,9 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, login_manager
-
+from sqlalchemy.orm import DeclarativeBase, relationship
 
 
 db = SQLAlchemy()
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -17,7 +17,7 @@ class User(db.Model):
 
     def get_id(self):
         """Return the email address to satisfy Flask-Login's requirements."""
-        return self.username
+        return self.id
 
     def is_authenticated(self):
         """Return True if the user is authenticated."""
@@ -28,10 +28,15 @@ class User(db.Model):
         return False
 
 
-
-
 class Rehber(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     ad = db.Column(db.String(50), nullable=False)
     soyad = db.Column(db.String(50), nullable=False)
     numara = db.Column(db.String(50), unique=True, nullable=False)
+    adresses = db.relationship("Adres", backref="Rehber", lazy=True)
+
+
+class Adres(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    mail = db.Column(db.String(120), unique=True, nullable=False)
+    rehber_id = db.Column(db.Integer, db.ForeignKey("rehber.id"), nullable=False)
