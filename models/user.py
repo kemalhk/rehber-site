@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_manager
 
 
+
 db = SQLAlchemy()
 
 class User(db.Model):
@@ -26,18 +27,11 @@ class User(db.Model):
         """False, as anonymous users aren't supported."""
         return False
 
-   
+
 
 
 class Rehber(db.Model):
-    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     ad = db.Column(db.String(50), nullable=False)
     soyad = db.Column(db.String(50), nullable=False)
     numara = db.Column(db.String(50), unique=True, nullable=False)
-
-   
-
-    
-    
-
-    
