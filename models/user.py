@@ -39,4 +39,8 @@ class Rehber(db.Model):
 class Adres(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     mail = db.Column(db.String(120), unique=True, nullable=False)
+    adres_adi=db.Column(db.String(30),nullable=False)
+    il=db.Column(db.String(20),nullable=False)
+    ilce=db.Column(db.String(25),nullable=False)
+    adres=db.Column(db.String(90),nullable=False)
     rehber_id = db.Column(db.Integer, db.ForeignKey("rehber.id"), nullable=False)
