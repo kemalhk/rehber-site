@@ -4,6 +4,7 @@ from .models.user import User, db, Rehber, Adres
 from flask_paginate import Pagination, get_page_parameter, get_page_args
 from http import HTTPStatus
 import math
+import hashlib
 
 from flask_login import (
     LoginManager,
@@ -63,7 +64,9 @@ def register():
         # tekrarlanan kayıt engelleme
         user = User.query.filter_by(username=username).first()
         if user is None:
-            kayit = User(username=username, password=password)
+            # Şifreyi şifreleme
+            hashed_password = hashlib.sha256(password.encode()).hexdigest()
+            kayit = User(username=username, password=hashed_password)
             db.session.add(kayit)
             db.session.commit()
             return redirect(url_for("login"))
@@ -76,10 +79,14 @@ def register():
 # giriş sayfası
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    
+
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        user = User.query.filter_by(username=username, password=password).first()
+        # Şifreyi şifreleme
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+        user = User.query.filter_by(username=username, password=hashed_password).first()
         if user is not None:
             login_user(user, remember=True)
             return redirect(url_for("list"))
@@ -112,6 +119,9 @@ def addNumber():
 def deleteNumber():
     if request.method == "POST":
         id = request.form["id"]
+        # adres adından rehber_id bulma 
+        adres_adi=request.form["adres_adi"]
+        adressil=Adres.qurey.filter_by(adres_adi=adressil).first()
         user = Rehber.query.get(id)
         db.session.delete(user)
         db.session.commit()
@@ -127,9 +137,7 @@ def list():
     addresses = Adres.query.all()
 
     # sayfalama islemi
-    sayfa_numarasi = request.args.get(
-        "sayfa_numarasi", 1, type=int
-    )  # URL'den sayfa numarasını al, varsayılan olarak 1
+    sayfa_numarasi = request.args.get("sayfa_numarasi", 1, type=int)  # URL'den sayfa numarasını al, varsayılan olarak 1
     sayfa_basi_oge_sayisi = 3
     offset = (sayfa_numarasi - 1) * sayfa_basi_oge_sayisi
     limit = sayfa_basi_oge_sayisi
@@ -140,12 +148,12 @@ def list():
     )  # Toplam sayfa sayısını hesapla
 
     return render_template(
-        "list.html",
-        users=users,
-        toplam_sayfa_sayisi=toplam_sayfa_sayisi,
-        sayfa_numarasi=sayfa_numarasi,
-        addresses=addresses,
-    )
+    "list.html",
+    users=users,
+    toplam_sayfa_sayisi=toplam_sayfa_sayisi,
+    sayfa_numarasi=sayfa_numarasi,
+    addresses=addresses,
+)
 
 
 # Kayıt güncelleme sayfası
@@ -168,17 +176,21 @@ def update():
     return render_template("list.html")
 
 
-# mail ekleme
-@app.route("/add_mail", methods=["POST"])
-def add_mail():
-    yeni_mail = request.form["mail"]
+# adres ekleme
+@app.route("/add_adres", methods=["POST"])
+def add_adres():
+    yeni_adres = request.form["adres_adi"]
     if request.method == "POST":
         # tekrarlanan kayıt engelleme
-        user = Adres.query.filter_by(mail=yeni_mail).first()
+        user = Adres.query.filter_by(adres_adi=yeni_adres).first()
         if user is None:
+            adres_adi = request.form["adres_adi"]
+            il = request.form["il"]
+            ilce = request.form["ilce"]
+            adres = request.form["adres"]
             mail = request.form["mail"]
             rehber_id = request.form["id"]
-            yeni_mail = Adres(mail=mail, rehber_id=rehber_id)
+            yeni_mail = Adres(adres_adi=adres_adi,il=il,ilce=ilce,adres=adres,mail=mail, rehber_id=rehber_id)
             db.session.add(yeni_mail)
             db.session.commit()
             return redirect(url_for("list"))

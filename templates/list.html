@@ -74,7 +74,7 @@
 
                             <select class="form-select" aria-label="Default select example">
                                 {% for adress in user.adresses %}
-                                <option value="{{ adress.mail }}">{{ adress.mail }}</option>
+                                <option value="{{ adress.mail }}" id="adres_adi" name="adres_adi">{{ adress.adres_adi }}</option>
                                 {% endfor %}
                             </select>
                         </td>
@@ -86,8 +86,8 @@
                                 onclick="deleteUser('{{ user.id }}', '{{ user.ad }}', '{{ user.soyad }}', '{{ user.numara }}')"><button
                                     type="button" class="btn btn-danger">Sil</button></a></td>
                         <td><a href="#"
-                                onclick="addMail('{{ user.id }}', '{{ user.ad }}', '{{ user.soyad }}', '{{ user.numara }}')"><button
-                                    type="button" class="btn btn-success">Mail Ekle</button></a></td>
+                                onclick="addAdres('{{ user.id }}', '{{ user.ad }}', '{{ user.soyad }}', '{{ user.numara }}')"><button
+                                    type="button" class="btn btn-success">Adres Ekle</button></a></td>
 
                     </tr>
                     {% endfor %}
@@ -103,6 +103,15 @@
                     <li><a href="{{ url_for('list', sayfa_numarasi=sayfa_numarasi+1) }}">Sonraki</a></li>
                     {% endif %}
                 </ul>
+                
+                <!-- <ul>
+                    {% if sayfa_numarasi > 1 %}
+                    <li><a href="{{ url_for('list', sayfa_numarasi=sayfa_numarasi-1) }}">Önceki</a></li>
+                    {% endif %}
+                    {% if toplam_sayfa_sayisi > sayfa_numarasi %}
+                    <li><a href="{{ url_for('list', sayfa_numarasi=sayfa_numarasi+1) }}">Sonraki</a></li>
+                    {% endif %}
+                </ul> -->
             </nav>
 
         </form>
@@ -208,25 +217,42 @@
         </div>
     </div>
 
-    <!-- Modal for insert mail Data -->
-    <div class="modal fade" id="addMailModal" tabindex="-1" role="dialog" aria-labelledby="addMailModalLabel"
+    <!-- Modal for insert adres Data -->
+    <div class="modal fade" id="addAdresModal" tabindex="-1" role="dialog" aria-labelledby="addAdresModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addMailModalLabel">Mai Adresi Ekle</h5>
+                    <h5 class="modal-title" id="addAdresModalLabel">Adres Ekle</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="{{ url_for('add_mail') }}">
+                    <form method="post" action="{{ url_for('add_adres') }}">
                         <input type="hidden" id="rehber_id" name="id">
                         <div class="form-group">
-                            <label for="addMail">Mail</label>
-                            <input type="text" class="form-control" id="addMail" name="mail">
+                            <label for="addAdres">Adres Başlığı</label>
+                            <input type="text" class="form-control" id="addAdres" name="adres_adi">
                         </div>
-                        <button type="submit" class="btn btn-success">Kayıt Et</button>
+                        <div class="form-group">
+                            <label for="addAdres">İl</label>
+                            <input type="text" class="form-control" id="addAdres" name="il">
+                        </div>
+                        <div class="form-group">
+                            <label for="addAdres">İlçe</label>
+                            <input type="text" class="form-control" id="addAdres" name="ilce">
+                        </div>
+                        <div class="form-group">
+                            <label for="addAdres">Adres</label>
+                            <input type="text" class="form-control" id="addAdres" name="adres">
+                        </div>
+                        <div class="form-group">
+                            <label for="addAdres">Mail</label>
+                            <input type="text" class="form-control" id="addAdres" name="mail">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success">Adres Ekle</button>
                     </form>
                 </div>
             </div>
@@ -261,10 +287,10 @@
 
             $('#addUserModal').modal('show');
         }
-        function addMail(rehber_id, mail) {
+        function addAdres(rehber_id, mail) {
             document.getElementById('rehber_id').value = rehber_id;
 
-            $('#addMailModal').modal('show');
+            $('#addAdresModal').modal('show');
         }
 
     </script>
