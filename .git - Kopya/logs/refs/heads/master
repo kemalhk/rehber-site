@@ -1,0 +1,15 @@
+0000000000000000000000000000000000000000 34e140920ef58e59f4ee5b34c934bb073ffddf1c kemal <kemalharunkara@gmail.com> 1681150536 +0300	commit (initial): login ve kayıt olma çalışıyor veritabanını yanlış yere kayıt ediyor
+34e140920ef58e59f4ee5b34c934bb073ffddf1c a3bc9a709ca12eb978a12c5da39bc334eacd5507 kemal <kemalharunkara@gmail.com> 1681150928 +0300	commit: veritabani models klasörünün altında oluşturuldu
+a3bc9a709ca12eb978a12c5da39bc334eacd5507 eaf7f36064284dc8e0ebddfccb10e91fad326ce6 kemal <kemalharunkara@gmail.com> 1681157558 +0300	commit: template ler oluşturuldu yönlendirlemeler yapıldı crud işlemleri yapılıcak ve görsellik katılıcak
+eaf7f36064284dc8e0ebddfccb10e91fad326ce6 623da98d6a030f7a251664d4ba111bbb0ec59957 kemal <kemalharunkara@gmail.com> 1681160826 +0300	commit: listeleme ekleme silme işlemi bitti ekleme işleminde boş veri olmadan kayıt engelleme ve güncelleme yapılıcak
+623da98d6a030f7a251664d4ba111bbb0ec59957 1409fbafbc8fb42fc75a55d3da2e64aa942130ed kemal <kemalharunkara@gmail.com> 1681161052 +0300	commit: boş veri olmadan kayıt engelleme yapıldı güncelleme yapılıcak
+1409fbafbc8fb42fc75a55d3da2e64aa942130ed b9048da845f10e86810e760a8973ed0858c03c29 kemal <kemalharunkara@gmail.com> 1681201009 +0300	commit: tarıma başlamadan önceki commit
+b9048da845f10e86810e760a8973ed0858c03c29 83db8ce51538cffdf582df22d0539010b05566a2 kemal <kemalharunkara@gmail.com> 1681208914 +0300	commit: boostrap ile sayfalar yapıldı fonksiyonlar çalışıyor
+83db8ce51538cffdf582df22d0539010b05566a2 5404153d3901276011b572e3cbf7ff7bdcc65d2e kemal <kemalharunkara@gmail.com> 1681234750 +0300	commit: anaproje bitti ekstra işler yapılıcak
+5404153d3901276011b572e3cbf7ff7bdcc65d2e 27c64efe079ae73a0d3989d2ffc7061afd65da96 kemal <kemalharunkara@gmail.com> 1681247241 +0300	commit: soru için açıklama satırı eklendi
+27c64efe079ae73a0d3989d2ffc7061afd65da96 829f70c15689fd89a16a21562199ad63dfd3c81c kemal <kemalharunkara@gmail.com> 1681329302 +0300	commit: modal olusturmadan onceki commit
+829f70c15689fd89a16a21562199ad63dfd3c81c f676fdec366ace59b0aae51a5292cab5068e2458 kemal <kemalharunkara@gmail.com> 1681333166 +0300	commit: modallar olusturuldu crud ıslemlerinde hata var onlara bakılıcak
+f676fdec366ace59b0aae51a5292cab5068e2458 92329fa193e04c0e29ab799d7f72e930883e6182 kemal <kemalharunkara@gmail.com> 1681417257 +0300	commit: birlestirme denendi
+92329fa193e04c0e29ab799d7f72e930883e6182 5835c7609d995dae3a89bd89cc404fa838951aeb kemal <kemalharunkara@gmail.com> 1681560978 +0300	commit (merge): github dan dosyları çekmeden önceki commit
+5835c7609d995dae3a89bd89cc404fa838951aeb bcd7d949cade9e2039a0ae44c47e0d355f3c97f6 kemal <kemalharunkara@gmail.com> 1681563019 +0300	commit (merge): branchları locale alma
+bcd7d949cade9e2039a0ae44c47e0d355f3c97f6 69ce0c3457f65171825e933bef806364d2905f9f kemal <kemalharunkara@gmail.com> 1681726856 +0300	commit: mail ekleme işlemi adres olarak değiştirildi db revize edildi

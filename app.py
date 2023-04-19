@@ -119,16 +119,18 @@ def addNumber():
 def deleteNumber():
     if request.method == "POST":
         id = request.form["id"]
-        # adres adından rehber_id bulma 
-        adres_adi=request.form["adres_adi"]
-        adressil=Adres.qurey.filter_by(adres_adi=adressil).first()
         user = Rehber.query.get(id)
+        # Rehber modeline bağlı olan Adres modellerini silme
+        adresler = Adres.query.filter_by(rehber_id=id).all()
+        for adres in adresler:
+            db.session.delete(adres)
         db.session.delete(user)
+        #db.session.delete(adressil)
         db.session.commit()
         return redirect(url_for("list"))
     return render_template("list.html")
 
-
+#test
 # Kayıt listeleme sayfası
 @app.route("/list", methods=["GET", "POST"])
 @login_required
@@ -145,7 +147,7 @@ def list():
     toplam_oge_sayisi = Rehber.query.count()  # toplam kayıtlar
     toplam_sayfa_sayisi = int(
         math.ceil(toplam_oge_sayisi / sayfa_basi_oge_sayisi)
-    )  # Toplam sayfa sayısını hesapla
+    )  # Toplam sayfa sayısını hesaplaa
 
     return render_template(
     "list.html",
@@ -182,7 +184,8 @@ def add_adres():
     yeni_adres = request.form["adres_adi"]
     if request.method == "POST":
         # tekrarlanan kayıt engelleme
-        user = Adres.query.filter_by(adres_adi=yeni_adres).first()
+        rehber_id = request.form["id"]
+        user = Adres.query.filter_by(adres_adi=yeni_adres,rehber_id=rehber_id).first()
         if user is None:
             adres_adi = request.form["adres_adi"]
             il = request.form["il"]
@@ -195,7 +198,7 @@ def add_adres():
             db.session.commit()
             return redirect(url_for("list"))
         else:
-            error = "Mail adresi kayıtlı"
+            error = " adresi kayıtlı"
             return render_template("list.html", error=error)
     return redirect(url_for("list"))
 
