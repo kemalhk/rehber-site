@@ -179,6 +179,8 @@ def update():
 @login_required
 def adres():
     rehber_id = request.args.get("rehber_id")  # URL'den rehber_id parametresini al
+    if request.method == "GET" and rehber_id == None:
+        return redirect(url_for("list"))
     user = Rehber.query.filter_by(id=rehber_id).first()  # seçilen kullanıcıyı bul
     addresses = Adres.query.filter_by(rehber_id=rehber_id).all()  # kayıtları listele
     return render_template(
@@ -191,13 +193,15 @@ def adres():
 # adres ekleme
 @app.route("/add_adres", methods=["POST"])
 def add_adres():
-    rehber_id = request.args.get("rehber_id")  # URL'den rehber_id parametresini al
-    print(rehber_id)
-    user = Rehber.query.filter_by(id=rehber_id).first()  # seçilen kullanıcıyı bul
+    if request.method == "GET":
+        return redirect(url_for("list"))
 
-    adres_adi = request.form["adres_adi"]
+    elif request.method == "POST":
+        rehber_id = request.args.get("rehber_id")  # URL'den rehber_id parametresini al
+        print(rehber_id)
+        user = Rehber.query.filter_by(id=rehber_id).first()  # seçilen kullanıcıyı bul
 
-    if request.method == "POST":
+        adres_adi = request.form["adres_adi"]
         print(rehber_id)
 
         user = Adres.query.filter_by(adres_adi=adres_adi, rehber_id=rehber_id).first()
@@ -217,11 +221,10 @@ def add_adres():
             )
             db.session.add(yeni_adres)
             db.session.commit()
-            return redirect(url_for("adres"))
+            return redirect(url_for("adres", rehber_id=rehber_id))
         else:
             error = " adresi kayıtlı"
             return render_template("adres.html", error=error)
-    return redirect(url_for("adres"))
 
 
 # adres güncelleme sayfası
@@ -253,11 +256,11 @@ def updateAdres():
 @login_required
 def deleteAdres():
     if request.method == "POST":
-        id = request.form["id"]
-        user = Rehber.query.get(id)
+        rehber_id = request.form["id"]
         adres_adi = request.form["adres_adi"]
-        # Rehber modeline bağlı olan Adres modellerini silme
-        adressil = Adres.query.filter_by(rehber_id=id, adres_adi=adres_adi).first()
+        adressil = Adres.query.filter_by(
+            rehber_id=rehber_id, adres_adi=adres_adi
+        ).first()
         if adressil is not None:
             db.session.delete(adressil)
             db.session.commit()
