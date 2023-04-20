@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Kayıt Ol</title>
+    <title>Adres İşlemleri</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
@@ -9,24 +9,56 @@
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <h2 class="text-center">Adres Ekle</h2>
+                <h2 class="text-center">Adres İşlemleri</h2>
                 {% if error %}
                     <div class="alert alert-danger">{{ error }}</div>
                         {% endif %}
                 <form method="post">
-            <div class="form-group">
-                <label for="username">Kullanıcı Adı</label>
-                <input type="text" class="form-control" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Şifre</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Kayıt Ol</button>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Mail</th>
+                                <th>Adres Adı</th>
+                                <th>İl</th>
+                                <th>İlçe</th>
+                                <th>Adres</th>
+                                <th>Rehber İd</th>
+                                <th>Adres Güncelle</th>
+                                <th>Adres Sil</th>
+                                <th>Adres ekle</th>
+        
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for adres in addresses %}
+                            <tr>
+                                <td><input type="text" value="{{ adres.id }}" id="id" name="id" class="form-control"
+                                        style="width: auto;" readonly></td>
+                                <td><input type="text" value="{{ adres.mail }}" id="mail" name="mail" class="form-control" style="width: auto;" readonly>
+                                </td>
+                                <td><input type="text" value="{{ adres.adres_adi }}" id="adres_adi" name="adres_adi" class="form-control" style="width: auto;"
+                                        readonly>
+                                </td>
+                                <td><input type="text" value="{{ adres.il }}" id="il" name="il" class="form-control" style="width: auto;"
+                                        readonly>
+                                </td>
+                                <td><input type="text" value="{{ adres.ilce }}" id="ilce" name="ilce" class="form-control" style="width: auto;"
+                                    readonly></td>
+                                <td><input type="text" value="{{ adres.adres }}" id="adres" name="adres" class="form-control" style="width: auto;"
+                                        readonly></td>
+                        
+                                <td><input type="text" value="{{ adres.rehber_id }}" id="rehber_id" name="rehber_id" class="form-control" style="width: auto;"
+                                    readonly></td>
+                        
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        
+                    </table>
+           
             
-            <div class="text-center">
-                <p>Hesabınız varsa  <a href="{{ url_for('login') }}">Giriş Yap</a></p>
-            </div>
+            
         </form>
     </div>
     </div>

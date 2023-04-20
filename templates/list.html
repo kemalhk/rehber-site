@@ -88,9 +88,8 @@
                         <td><a href="#"
                                 onclick="deleteUser('{{ user.id }}', '{{ user.ad }}', '{{ user.soyad }}', '{{ user.numara }}')"><button
                                     type="button" class="btn btn-danger">Sil</button></a></td>
-                        <td><a href="#"
-                                onclick="addAdres('{{ user.id }}', '{{ user.ad }}', '{{ user.soyad }}', '{{ user.numara }}')"><button
-                                    type="button" class="btn btn-success">Adres Ekle</button></a></td>
+                        <td><a href="{{url_for('adres',rehber_id=user.id)}}"><button
+                                    type="button" class="btn btn-success">Adres İşlemleri</button></a></td>
 
                     </tr>
                     {% endfor %}

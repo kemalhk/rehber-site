@@ -47,11 +47,6 @@ def logout():
 
 @login_manager.user_loader
 def user_loader(id):
-    """Given *user_id*, return the associated User object.
-
-    :param unicode user_id: user_id (email) user to retrieve
-
-    """
     return User.query.get(id)
 
 
@@ -178,6 +173,34 @@ def update():
     return render_template("list.html")
 
 
+
+
+# adres  sayfası
+@app.route("/adres", methods=["GET", "POST"])
+@login_required
+def adres():
+    users = Rehber.query.all()
+    addresses = None
+    rehber_id = request.args.get('rehber_id')  # URL'den rehber_id parametresini al
+    addresses = Adres.query.get(rehber_id)
+
+    """ for address in addresses:
+        print("ID:", address.id)
+        print("Mail:", address.mail)
+        print("Adres Adı:", address.adres_adi)
+        print("İl:", address.il)
+        print("İlçe:", address.ilce)
+        print("Adres:", address.adres)
+        print("Rehber ID:", address.rehber_id)
+        print("--------")  """
+    
+    return render_template(
+        "adres.html",
+        users=users,
+        addresses=addresses or [] ,
+    )
+
+
 # adres ekleme
 @app.route("/add_adres", methods=["POST"])
 def add_adres():
@@ -196,11 +219,29 @@ def add_adres():
             yeni_mail = Adres(adres_adi=adres_adi,il=il,ilce=ilce,adres=adres,mail=mail, rehber_id=rehber_id)
             db.session.add(yeni_mail)
             db.session.commit()
-            return redirect(url_for("list"))
+            return redirect(url_for("adres"))
         else:
             error = " adresi kayıtlı"
-            return render_template("list.html", error=error)
-    return redirect(url_for("list"))
+            return render_template("adres.html", error=error)
+    return redirect(url_for("adres"))
+
+
+# adres silme sayfası
+@app.route("/deleteAdres", methods=["GET", "POST"])
+@login_required
+def deleteAdres():
+    if request.method == "POST":
+        id = request.form["id"]
+        user = Rehber.query.get(id)
+        adres_adi=request.form["adres_adi"]
+        # Rehber modeline bağlı olan Adres modellerini silme
+        adressil = Adres.query.filter_by(rehber_id=id,adres_adi=adres_adi).first()
+        if adressil is not None:
+            db.session.delete(adressil)
+            db.session.commit()
+            return redirect(url_for("adres"))
+    return render_template("adres.html")
+
 
 
 # kod olmadan vt oluşmyor sorulucak
