@@ -191,19 +191,23 @@ def adres():
 # adres ekleme
 @app.route("/add_adres", methods=["POST"])
 def add_adres():
-    yeni_adres = request.form["adres_adi"]
+    rehber_id = request.args.get("rehber_id")  # URL'den rehber_id parametresini al
+    print(rehber_id)
+    user = Rehber.query.filter_by(id=rehber_id).first()  # seçilen kullanıcıyı bul
+
+    adres_adi = request.form["adres_adi"]
+
     if request.method == "POST":
-        # tekrarlanan kayıt engelleme
-        rehber_id = request.form["id"]
-        user = Adres.query.filter_by(adres_adi=yeni_adres, rehber_id=rehber_id).first()
+        print(rehber_id)
+
+        user = Adres.query.filter_by(adres_adi=adres_adi, rehber_id=rehber_id).first()
         if user is None:
             adres_adi = request.form["adres_adi"]
             il = request.form["il"]
             ilce = request.form["ilce"]
             adres = request.form["adres"]
             mail = request.form["mail"]
-            rehber_id = request.form["id"]
-            yeni_mail = Adres(
+            yeni_adres = Adres(
                 adres_adi=adres_adi,
                 il=il,
                 ilce=ilce,
@@ -211,7 +215,7 @@ def add_adres():
                 mail=mail,
                 rehber_id=rehber_id,
             )
-            db.session.add(yeni_mail)
+            db.session.add(yeni_adres)
             db.session.commit()
             return redirect(url_for("adres"))
         else:
@@ -238,6 +242,8 @@ def updateAdres():
         db.session.update(kayit)
         db.session.commit()
         return redirect(url_for("adres"))
+    else:
+        return render_template("adres.html", hata_mesaj="Kayıt bulunamadı")
 
     return render_template("adres.html")
 
