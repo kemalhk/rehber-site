@@ -217,7 +217,7 @@ def add_adres():
             )
             db.session.add(yeni_adres)
             db.session.commit()
-            return redirect(url_for("adres"))
+            return redirect(url_for("adres", rehber_id=rehber_id))
         else:
             error = " adresi kayıtlı"
             return render_template("adres.html", error=error)
@@ -252,16 +252,17 @@ def updateAdres():
 @app.route("/deleteAdres", methods=["GET", "POST"])
 @login_required
 def deleteAdres():
+    rehber_id = request.args.get("rehber_id")  # URL'den rehber_id parametresini al
     if request.method == "POST":
-        id = request.form["id"]
-        user = Rehber.query.get(id)
+        rehber_id = request.form["id"]
         adres_adi = request.form["adres_adi"]
-        # Rehber modeline bağlı olan Adres modellerini silme
-        adressil = Adres.query.filter_by(rehber_id=id, adres_adi=adres_adi).first()
+        adressil = Adres.query.filter_by(
+            rehber_id=rehber_id, adres_adi=adres_adi
+        ).first()
         if adressil is not None:
             db.session.delete(adressil)
             db.session.commit()
-            return redirect(url_for("adres"))
+            return redirect(url_for("adres", rehber_id=rehber_id))
     return render_template("adres.html")
 
 
