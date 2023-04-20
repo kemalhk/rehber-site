@@ -252,9 +252,9 @@ def updateAdres():
 @app.route("/deleteAdres", methods=["GET", "POST"])
 @login_required
 def deleteAdres():
-    rehber_id = request.args.get("rehber_id")  # URL'den rehber_id parametresini al
+    rehber_id = request.args.get("id")  # URL'den rehber_id parametresini al
+    print(rehber_id)
     if request.method == "POST":
-        rehber_id = request.form["id"]
         adres_adi = request.form["adres_adi"]
         adressil = Adres.query.filter_by(
             rehber_id=rehber_id, adres_adi=adres_adi
@@ -263,7 +263,7 @@ def deleteAdres():
             db.session.delete(adressil)
             db.session.commit()
             return redirect(url_for("adres", rehber_id=rehber_id))
-    return render_template("adres.html")
+    return redirect(url_for("adres", rehber_id=rehber_id))
 
 
 # kod olmadan vt oluşmyor sorulucak
