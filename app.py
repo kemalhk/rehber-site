@@ -230,18 +230,19 @@ def add_adres():
 def updateAdres():
     if request.method == "POST":
         rehber_id = request.form["rehber_id"]
+        print(rehber_id)
         id = request.form["id"]
-        kayit = Adres.query.filter_by(
-            rehber_id=rehber_id, id=id
-        )  # rehber id ve id den kayıt bulma
-        kayit.adres_adi = request.form("adres_adi")
-        kayit.il = request.form("il")
-        kayit.ilce = request.form("ilce")
-        kayit.adres = request.form("adres")
-        kayit.mail = request.form("mail")
-        db.session.update(kayit)
-        db.session.commit()
-        return redirect(url_for("adres"))
+        print(id)
+
+        kayit = Adres.query.get(rehber_id)  # rehber id ve id den kayıt bulma
+        if kayit:
+            kayit.adres_adi = request.form["adres_adi"]
+            kayit.il = request.form["il"]
+            kayit.ilce = request.form["ilce"]
+            kayit.adres = request.form["adres"]
+            kayit.mail = request.form["mail"]
+            db.session.commit()
+        return redirect(url_for("adres", rehber_id=id))
     else:
         return render_template("adres.html", hata_mesaj="Kayıt bulunamadı")
 

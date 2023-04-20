@@ -89,8 +89,11 @@
                             <td><input type="text" value="{{ adres.rehber_id }}" id="rehber_id" name="rehber_id"
                                     class="form-control" style="width: auto;" readonly></td>
                             <td><a href="#"
-                                    onclick="editAdres('{{ adres.rehber_id }}', '{{ adres.id }}', '{{ adres.adres_adi }}', '{{ adres.il }}','{{adres.ilce}}','{{adres.adres}}','{{adres.mail}}')"><button
-                                        type="button" class="btn btn-info">Güncelle</button></a></td>
+                                    onclick="editAdres('{{ adres.rehber_id }}', '{{ adres.id }}', '{{ adres.adres_adi }}', '{{ adres.il }}','{{adres.ilce}}','{{adres.adres}}','{{adres.mail}}')"
+                                    data-toggle="modal" data-target="#editAdresModal">
+                                    <button type="button" class="btn btn-info">Güncelle</button>
+                                </a>
+                            </td>
                             <td><a href="#"
                                     onclick="deleteAdres('{{ adres.rehber_id }}', '{{ adres.id }}', '{{ adres.adres_adi }}', '{{ adres.il }}','{{adres.ilce}}','{{adres.adres}}','{{adres.mail}}')"><button
                                         type="button" class="btn btn-danger">Sil</button></a></td>
@@ -197,6 +200,50 @@
             </div>
         </div>
 
+        <!-- Modal for update adres Data -->
+        <div class="modal fade" id="editAdresModal" tabindex="-1" role="dialog" aria-labelledby="editAdresModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editAdresModalLabel">Adres Güncelle</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="{{ url_for('updateAdres') }}">
+                            <input type="hidden" id="editUserId" name="id">
+                            <input type="hidden" id="editUserRehber_Id" name="rehber_id">
+                            <div class="form-group">
+                                <label for="editAdresAd">Adres Başlığı</label>
+                                <input type="text" class="form-control" id="editAdresAd" name="adres_adi">
+                            </div>
+                            <div class="form-group">
+                                <label for="editAdresIl">İl</label>
+                                <input type="text" class="form-control" id="editAdresIl" name="il">
+                            </div>
+                            <div class="form-group">
+                                <label for="editAdresIlce">İlçe</label>
+                                <input type="text" class="form-control" id="editAdresIlce" name="ilce">
+                            </div>
+                            <div class="form-group">
+                                <label for="editAdresAdres">Adres</label>
+                                <input type="text" class="form-control" id="editAdresAdres" name="adres">
+                            </div>
+                            <div class="form-group">
+                                <label for="editAdresMail">Mail</label>
+                                <input type="text" class="form-control" id="editAdresMail" name="mail">
+                            </div>
+                            <button type="submit" class="btn btn-info">Güncelle</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
     </div>
 
@@ -212,19 +259,6 @@
             $('#addAdresModal').modal('show');
         }
 
-
-        function editAdres(id, rehber_id, adres_adi, il, ilce, adres, mail) {
-            document.getElementById('editUserId').value = id;
-            document.getElementById('editUserRehber_Id').value = rehber_id;
-            document.getElementById('editAdresAd').value = adres_adi;
-            document.getElementById('editAdresIl').value = il;
-            document.getElementById('editAdresIlce').value = ilce;
-            document.getElementById('editAdresAdres').value = adres;
-            document.getElementById('editAdresMail').value = mail;
-            $('#editAdresModal').modal('show');
-        }
-
-
         function deleteAdres(id, mail, adres_adi, il, ilce, adres, rehber_id) {
             document.getElementById('deleteRehber_id').value = rehber_id;
             document.getElementById('deleteAdres_adi').value = adres_adi;
@@ -236,6 +270,16 @@
             $('#deleteAdresModal').modal('show');
         }
 
+        function editAdres(id, rehber_id, adres_adi, il, ilce, adres, mail) {
+            document.getElementById('editUserId').value = id;
+            document.getElementById('editUserRehber_Id').value = rehber_id;
+            document.getElementById('editAdresAd').value = adres_adi;
+            document.getElementById('editAdresIl').value = il;
+            document.getElementById('editAdresIlce').value = ilce;
+            document.getElementById('editAdresAdres').value = adres;
+            document.getElementById('editAdresMail').value = mail;
+            $('#editAdresModal').modal('show');
+        }
 
     </script>
 </body>
