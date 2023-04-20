@@ -77,7 +77,8 @@
 
                             <select class="form-select" aria-label="Default select example">
                                 {% for adress in user.adresses %}
-                                <option value="{{ adress.adres_adi }}" id="adres_adi" name="adres_adi">{{ adress.adres_adi }}</option>
+                                <option value="{{ adress.adres_adi }}" id="adres_adi" name="adres_adi">{{
+                                    adress.adres_adi }}</option>
                                 {% endfor %}
                             </select>
                         </td>
@@ -88,8 +89,8 @@
                         <td><a href="#"
                                 onclick="deleteUser('{{ user.id }}', '{{ user.ad }}', '{{ user.soyad }}', '{{ user.numara }}')"><button
                                     type="button" class="btn btn-danger">Sil</button></a></td>
-                        <td><a href="{{url_for('adres',rehber_id=user.id)}}"><button
-                                    type="button" class="btn btn-success">Adres İşlemleri</button></a></td>
+                        <td><a href="{{url_for('adres',rehber_id=user.id)}}"><button type="button"
+                                    class="btn btn-success">Adres İşlemleri</button></a></td>
 
                     </tr>
                     {% endfor %}
@@ -105,7 +106,7 @@
                     <li><a href="{{ url_for('list', sayfa_numarasi=sayfa_numarasi+1) }}">Sonraki</a></li>
                     {% endif %}
                 </ul>
-                
+
                 <!-- <ul>
                     {% if sayfa_numarasi > 1 %}
                     <li><a href="{{ url_for('list', sayfa_numarasi=sayfa_numarasi-1) }}">Önceki</a></li>
@@ -253,7 +254,7 @@
                             <label for="addAdres">Mail</label>
                             <input type="text" class="form-control" id="addAdres" name="mail">
                         </div>
-                        
+
                         <button type="submit" class="btn btn-success">Adres Ekle</button>
                     </form>
                 </div>

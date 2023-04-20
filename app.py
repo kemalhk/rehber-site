@@ -74,8 +74,6 @@ def register():
 # giriş sayfası
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    
-
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -120,12 +118,13 @@ def deleteNumber():
         for adres in adresler:
             db.session.delete(adres)
         db.session.delete(user)
-        #db.session.delete(adressil)
+        # db.session.delete(adressil)
         db.session.commit()
         return redirect(url_for("list"))
     return render_template("list.html")
 
-#test
+
+# test
 # Kayıt listeleme sayfası
 @app.route("/list", methods=["GET", "POST"])
 @login_required
@@ -134,7 +133,9 @@ def list():
     addresses = Adres.query.all()
 
     # sayfalama islemi
-    sayfa_numarasi = request.args.get("sayfa_numarasi", 1, type=int)  # URL'den sayfa numarasını al, varsayılan olarak 1
+    sayfa_numarasi = request.args.get(
+        "sayfa_numarasi", 1, type=int
+    )  # URL'den sayfa numarasını al, varsayılan olarak 1
     sayfa_basi_oge_sayisi = 3
     offset = (sayfa_numarasi - 1) * sayfa_basi_oge_sayisi
     limit = sayfa_basi_oge_sayisi
@@ -145,12 +146,12 @@ def list():
     )  # Toplam sayfa sayısını hesaplaa
 
     return render_template(
-    "list.html",
-    users=users,
-    toplam_sayfa_sayisi=toplam_sayfa_sayisi,
-    sayfa_numarasi=sayfa_numarasi,
-    addresses=addresses,
-)
+        "list.html",
+        users=users,
+        toplam_sayfa_sayisi=toplam_sayfa_sayisi,
+        sayfa_numarasi=sayfa_numarasi,
+        addresses=addresses,
+    )
 
 
 # Kayıt güncelleme sayfası
@@ -173,31 +174,17 @@ def update():
     return render_template("list.html")
 
 
-
-
 # adres  sayfası
 @app.route("/adres", methods=["GET", "POST"])
 @login_required
 def adres():
-    users = Rehber.query.all()
-    addresses = None
-    rehber_id = request.args.get('rehber_id')  # URL'den rehber_id parametresini al
-    addresses = Adres.query.get(rehber_id)
-
-    """ for address in addresses:
-        print("ID:", address.id)
-        print("Mail:", address.mail)
-        print("Adres Adı:", address.adres_adi)
-        print("İl:", address.il)
-        print("İlçe:", address.ilce)
-        print("Adres:", address.adres)
-        print("Rehber ID:", address.rehber_id)
-        print("--------")  """
-    
+    rehber_id = request.args.get("rehber_id")  # URL'den rehber_id parametresini al
+    user = Rehber.query.filter_by(id=rehber_id).first()  # seçilen kullanıcıyı bul
+    addresses = Adres.query.filter_by(rehber_id=rehber_id).all()  # kayıtları listele
     return render_template(
         "adres.html",
-        users=users,
-        addresses=addresses or [] ,
+        user=user,
+        addresses=addresses or [],  # [] adres boş geliyorsa listeleme için
     )
 
 
@@ -208,7 +195,7 @@ def add_adres():
     if request.method == "POST":
         # tekrarlanan kayıt engelleme
         rehber_id = request.form["id"]
-        user = Adres.query.filter_by(adres_adi=yeni_adres,rehber_id=rehber_id).first()
+        user = Adres.query.filter_by(adres_adi=yeni_adres, rehber_id=rehber_id).first()
         if user is None:
             adres_adi = request.form["adres_adi"]
             il = request.form["il"]
@@ -216,7 +203,14 @@ def add_adres():
             adres = request.form["adres"]
             mail = request.form["mail"]
             rehber_id = request.form["id"]
-            yeni_mail = Adres(adres_adi=adres_adi,il=il,ilce=ilce,adres=adres,mail=mail, rehber_id=rehber_id)
+            yeni_mail = Adres(
+                adres_adi=adres_adi,
+                il=il,
+                ilce=ilce,
+                adres=adres,
+                mail=mail,
+                rehber_id=rehber_id,
+            )
             db.session.add(yeni_mail)
             db.session.commit()
             return redirect(url_for("adres"))
@@ -226,6 +220,28 @@ def add_adres():
     return redirect(url_for("adres"))
 
 
+# adres güncelleme sayfası
+@app.route("/adresUpdate", methods=["GET", "POST"])
+@login_required
+def updateAdres():
+    if request.method == "POST":
+        rehber_id = request.form["rehber_id"]
+        id = request.form["id"]
+        kayit = Adres.query.filter_by(
+            rehber_id=rehber_id, id=id
+        )  # rehber id ve id den kayıt bulma
+        kayit.adres_adi = request.form("adres_adi")
+        kayit.il = request.form("il")
+        kayit.ilce = request.form("ilce")
+        kayit.adres = request.form("adres")
+        kayit.mail = request.form("mail")
+        db.session.update(kayit)
+        db.session.commit()
+        return redirect(url_for("adres"))
+
+    return render_template("adres.html")
+
+
 # adres silme sayfası
 @app.route("/deleteAdres", methods=["GET", "POST"])
 @login_required
@@ -233,15 +249,14 @@ def deleteAdres():
     if request.method == "POST":
         id = request.form["id"]
         user = Rehber.query.get(id)
-        adres_adi=request.form["adres_adi"]
+        adres_adi = request.form["adres_adi"]
         # Rehber modeline bağlı olan Adres modellerini silme
-        adressil = Adres.query.filter_by(rehber_id=id,adres_adi=adres_adi).first()
+        adressil = Adres.query.filter_by(rehber_id=id, adres_adi=adres_adi).first()
         if adressil is not None:
             db.session.delete(adressil)
             db.session.commit()
             return redirect(url_for("adres"))
     return render_template("adres.html")
-
 
 
 # kod olmadan vt oluşmyor sorulucak

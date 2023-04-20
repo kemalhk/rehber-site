@@ -1,21 +1,45 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Adres İşlemleri</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+
 <body>
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <h2 class="text-center">Adres İşlemleri</h2>
                 {% if error %}
-                    <div class="alert alert-danger">{{ error }}</div>
-                        {% endif %}
+                <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
                 <form method="post">
                     <table class="table">
                         <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Ad</th>
+                                <th>Soyad</th>
+                                <th>Numara</th>
+                            </tr>
+                            <tr>
+                                <td><input type="text" value="{{ user.id }}" id="id" name="id" class="form-control"
+                                        style="width: auto;" readonly></td>
+                                <td><input type="text" value="{{ user.ad }}" id="ad" name="ad" class="form-control"
+                                        readonly>
+                                </td>
+                                <td><input type="text" value="{{ user.soyad }}" id="soyad" name="soyad"
+                                        class="form-control" readonly>
+                                </td>
+                                <td><input type="text" value="{{ user.numara }}" id="numara" name="numara"
+                                        class="form-control" readonly>
+                                </td>
+                                <td>
+                            </tr>
+
+
                             <tr>
                                 <th>Id</th>
                                 <th>Mail</th>
@@ -26,42 +50,102 @@
                                 <th>Rehber İd</th>
                                 <th>Adres Güncelle</th>
                                 <th>Adres Sil</th>
-                                <th>Adres ekle</th>
-        
+
+
                             </tr>
                         </thead>
                         <tbody>
+
                             {% for adres in addresses %}
                             <tr>
                                 <td><input type="text" value="{{ adres.id }}" id="id" name="id" class="form-control"
                                         style="width: auto;" readonly></td>
-                                <td><input type="text" value="{{ adres.mail }}" id="mail" name="mail" class="form-control" style="width: auto;" readonly>
+                                <td><input type="text" value="{{ adres.mail }}" id="mail" name="mail"
+                                        class="form-control" style="width: auto;" readonly>
                                 </td>
-                                <td><input type="text" value="{{ adres.adres_adi }}" id="adres_adi" name="adres_adi" class="form-control" style="width: auto;"
-                                        readonly>
+                                <td><input type="text" value="{{ adres.adres_adi }}" id="adres_adi" name="adres_adi"
+                                        class="form-control" style="width: auto;" readonly>
                                 </td>
-                                <td><input type="text" value="{{ adres.il }}" id="il" name="il" class="form-control" style="width: auto;"
-                                        readonly>
+                                <td><input type="text" value="{{ adres.il }}" id="il" name="il" class="form-control"
+                                        style="width: auto;" readonly>
                                 </td>
-                                <td><input type="text" value="{{ adres.ilce }}" id="ilce" name="ilce" class="form-control" style="width: auto;"
-                                    readonly></td>
-                                <td><input type="text" value="{{ adres.adres }}" id="adres" name="adres" class="form-control" style="width: auto;"
-                                        readonly></td>
-                        
-                                <td><input type="text" value="{{ adres.rehber_id }}" id="rehber_id" name="rehber_id" class="form-control" style="width: auto;"
-                                    readonly></td>
-                        
+                                <td><input type="text" value="{{ adres.ilce }}" id="ilce" name="ilce"
+                                        class="form-control" style="width: auto;" readonly></td>
+                                <td><input type="text" value="{{ adres.adres }}" id="adres" name="adres"
+                                        class="form-control" style="width: auto;" readonly></td>
+
+                                <td><input type="text" value="{{ adres.rehber_id }}" id="rehber_id" name="rehber_id"
+                                        class="form-control" style="width: auto;" readonly></td>
+                                <td><a href="#"
+                                        onclick="editAdres('{{ user.id }}', '{{ user.ad }}', '{{ user.soyad }}', '{{ user.numara }}')"><button
+                                            type="button" class="btn btn-info">Güncelle</button></a></td>
+                                <td><a href="#"
+                                        onclick="deleteUser('{{ user.id }}', '{{ user.ad }}', '{{ user.soyad }}', '{{ user.numara }}')"><button
+                                            type="button" class="btn btn-danger">Sil</button></a></td>
+
                             </tr>
                             {% endfor %}
                         </tbody>
-                        
+
                     </table>
-           
-            
-            
-        </form>
+
+
+
+                </form>
+            </div>
+            <!-- Modal for delete adres Data -->
+            <div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog"
+                aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteUserModalLabel">Kullanıcıyı Sil</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="{{ url_for('deleteNumber') }}">
+                                <input type="hidden" id="deleteUserId" name="id">
+                                <div class="form-group">
+                                    <label for="deleteUserAd">Ad</label>
+                                    <input type="text" class="form-control" id="deleteUserAd" name="ad">
+                                </div>
+                                <div class="form-group">
+                                    <label for="deleteUserSoyad">Soyad</label>
+                                    <input type="text" class="form-control" id="deleteUserSoyad" name="soyad">
+                                </div>
+                                <div class="form-group">
+                                    <label for="deleteUserNumara">Numara</label>
+                                    <input type="text" class="form-control" id="deleteUserNumara" name="numara">
+                                </div>
+                                <button type="submit" class="btn btn-danger">Sil</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
     </div>
-    </div>
-    </div>
+    <script>
+        function editAdres(id, ad, soyad, numara) {
+            document.getElementById('editUserId').value = id;
+            document.getElementById('editUserRehber_Id').value = rehber_id;
+            document.getElementById('editUserSoyad').value = soyad;
+            document.getElementById('editUserNumara').value = numara;
+            $('#editUserModal').modal('show');
+        }
+        function deleteUser(id, ad, soyad, numara) {
+            document.getElementById('deleteUserId').value = id;
+            document.getElementById('deleteUserAd').value = ad;
+            document.getElementById('deleteUserSoyad').value = soyad;
+            document.getElementById('deleteUserNumara').value = numara;
+            $('#deleteUserModal').modal('show');
+        }
+    </script>
 </body>
+
 </html>
