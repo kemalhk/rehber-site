@@ -106,46 +106,50 @@
         </form>
     </div>
     <!-- Modal for delete adres Data -->
-    <div class="modal fade" id="deleteAdresModal" tabindex="-1" role="dialog" aria-labelledby="deleteAdresModalLabel"
+
+
+    <div class="modal fade" id="updateAdresModal" tabindex="-1" role="dialog" aria-labelledby="updateAdresModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="deleteAdresModalLabel">Kullanıcıyı Sil</h5>
+                    <h5 class="modal-title" id="updateAdresModalLabel">Adresi Güncelle</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="{{ url_for('deleteAdres',rehber_id=user.id) }}">
-                        <input type="hidden" id="deleteRehber_id" name="id">
+                    <form method="post" action="{{ url_for('adresUpdate', adres_id=adres.id) }}">
+                        <input type="hidden" id="updateAdres_id" name="id">
                         <div class="form-group">
-                            <label for="deleteAdres_adi">Adres Başlığı</label>
-                            <input type="text" class="form-control" id="deleteAdres_adi" name="adres_adi">
+                            <label for="updateAdres_adi">Adres Başlığı</label>
+                            <input type="text" class="form-control" id="updateAdres_adi" name="adres_adi">
                         </div>
                         <div class="form-group">
-                            <label for="deleteAdresIl">İl</label>
-                            <input type="text" class="form-control" id="deleteAdresIl" name="il">
+                            <label for="updateAdresIl">İl</label>
+                            <input type="text" class="form-control" id="updateAdresIl" name="il">
                         </div>
                         <div class="form-group">
-                            <label for="deleteAdresIlce">İlçe</label>
-                            <input type="text" class="form-control" id="deleteAdresIlce" name="ilce">
+                            <label for="updateAdresIlce">İlçe</label>
+                            <input type="text" class="form-control" id="updateAdresIlce" name="ilce">
                         </div>
                         <div class="form-group">
-                            <label for="deleteAdresAdres">Adres</label>
-                            <input type="text" class="form-control" id="deleteAdresAdres" name="adres">
+                            <label for="updateAdresAdres">Adres</label>
+                            <input type="text" class="form-control" id="updateAdresAdres" name="adres">
                         </div>
                         <div class="form-group">
-                            <label for="deleteAdresMail">Mail</label>
-                            <input type="text" class="form-control" id="deleteAdresMail" name="mail">
+                            <label for="updateAdresMail">Mail</label>
+                            <input type="text" class="form-control" id="updateAdresMail" name="mail">
                         </div>
 
-                        <button type="submit" class="btn btn-danger">Sil</button>
+                        <button type="submit" class="btn btn-danger">Güncelle</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+
 
 
 
@@ -221,6 +225,7 @@
             document.getElementById('editAdresMail').value = mail;
             $('#editAdresModal').modal('show');
         }
+
         function deleteAdres(id, mail, adres_adi, il, ilce, adres, rehber_id) {
             document.getElementById('deleteRehber_id').value = id;
             document.getElementById('deleteAdres_adi').value = adres_adi;

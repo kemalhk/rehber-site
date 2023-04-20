@@ -255,6 +255,7 @@ def updateAdres():
 @app.route("/deleteAdres", methods=["GET", "POST"])
 @login_required
 def deleteAdres():
+    rehber_id = request.args.get("rehber_id")  # URL'den rehber_id parametresini al
     if request.method == "POST":
         rehber_id = request.form["id"]
         adres_adi = request.form["adres_adi"]
@@ -264,7 +265,7 @@ def deleteAdres():
         if adressil is not None:
             db.session.delete(adressil)
             db.session.commit()
-            return redirect(url_for("adres"))
+            return redirect(url_for("adres", rehber_id=rehber_id))
     return render_template("adres.html")
 
 
