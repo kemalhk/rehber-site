@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, abort
+from flask import Flask, render_template, request, redirect, url_for, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from .models.user import User, db, Rehber, Adres
 from flask_paginate import Pagination, get_page_parameter, get_page_args
@@ -179,6 +179,8 @@ def update():
 @login_required
 def adres():
     rehber_id = request.args.get("rehber_id")  # URL'den rehber_id parametresini al
+    if rehber_id is None:
+        return redirect(url_for("list"))
     user = Rehber.query.filter_by(id=rehber_id).first()  # seçilen kullanıcıyı bul
     addresses = Adres.query.filter_by(rehber_id=rehber_id).all()  # kayıtları listele
     return render_template(
@@ -246,8 +248,6 @@ def updateAdres():
     else:
         return render_template("adres.html", hata_mesaj="Kayıt bulunamadı")
 
-    return render_template("adres.html")
-
 
 # adres silme sayfası
 @app.route("/deleteAdres", methods=["GET", "POST"])
@@ -267,6 +267,7 @@ def deleteAdres():
     return redirect(url_for("adres", rehber_id=rehber_id))
 
 
+# sayfa içi arama kısımı
 # kod olmadan vt oluşmyor sorulucak
 with app.app_context():
     db.create_all()
