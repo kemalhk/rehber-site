@@ -4,7 +4,10 @@
 <head>
     <title>Listeleme</title>
     <!-- Add Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         .table-container {
             display: flex;
@@ -22,18 +25,49 @@
             outline: none !important;
             box-shadow: none !important;
         }
+
+        .profile-icon {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            z-index: 999;
+            min-width: 150px;
+            padding: 10px;
+            background-color: #fff;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            display: none;
+            text-align: center;
+            /* Açılan menüyü sağ tarafa doğru hizala */
+        }
+
+        .profile-icon:hover .profile-dropdown {
+            display: block;
+        }
     </style>
 </head>
 
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <h1 class="text-center">Rehber</h1>
-                <p class="text-center"><a href="{{ url_for('logout') }}">Çıkış yap.</a></p>
-            </div>
+
+
+    <!-- Profil ikonu -->
+    <div class="profile-icon float-right">
+        <a href="#" role="button" id="profileDropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user-circle fa-2x"></i>
+        </a>
+        <!-- Profil ikonu için açılır menü -->
+        <div class="profile-dropdown">
+            <a class="dropdown-item" href="{{ url_for('profil', user_id=user_id) }}">Profilim</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{{ url_for('logout') }}">Çıkış</a>
         </div>
     </div>
+
+
     <div class="table-container">
         <form method="post">
 
@@ -267,6 +301,9 @@
 
 
     <!-- Add Bootstrap and jQuery JS -->
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.9/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -297,6 +334,7 @@
         }
 
     </script>
+
 </body>
 
 </html>

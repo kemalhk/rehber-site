@@ -80,9 +80,10 @@ def login():
         # Şifreyi şifreleme
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
         user = User.query.filter_by(username=username, password=hashed_password).first()
+        user_id = user.id
         if user is not None:
             login_user(user, remember=True)
-            return redirect(url_for("list"))
+            return redirect(url_for("list", user_id=user_id))
         else:
             error = "Kullanıcı adı veya şifre hatalı."
             return render_template("login.html", error=error)
@@ -129,6 +130,9 @@ def deleteNumber():
 @app.route("/list", methods=["GET", "POST"])
 @login_required
 def list():
+    user_id = request.args.get(
+        "user_id"
+    )  # profil sayfasında işlem yapabilmek için loginden gelen id yi alıyoruz
     users = Rehber.query.all()
     addresses = Adres.query.all()
 
@@ -151,6 +155,7 @@ def list():
         toplam_sayfa_sayisi=toplam_sayfa_sayisi,
         sayfa_numarasi=sayfa_numarasi,
         addresses=addresses,
+        user_id=user_id,
     )
 
 
@@ -265,6 +270,14 @@ def deleteAdres():
             db.session.commit()
             return redirect(url_for("adres", rehber_id=rehber_id))
     return redirect(url_for("adres", rehber_id=rehber_id))
+
+
+# profil sayfasında kullanıcı şifresi değiştirme
+@app.route("/profil", methods=["GET", "POST"])
+@login_required
+def profil():
+    user_id = request.args.get("user_id")
+    return render_template("profil.html", user_id=user_id)
 
 
 # sayfa içi arama kısımı
