@@ -3,250 +3,297 @@
 
 <head>
     <title>Adres İşlemleri</title>
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+<style>
+    .table-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    table {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .form-control:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    .profile-icon {
+        position: relative;
+        cursor: pointer;
+    }
+
+    .profile-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        z-index: 999;
+        min-width: 150px;
+        padding: 10px;
+        background-color: #fff;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+        display: none;
+        text-align: center;
+        /* Açılan menüyü sağ tarafa doğru hizala */
+    }
+
+    .profile-icon:hover .profile-dropdown {
+        display: block;
+    }
+</style>
 
 <body>
-    <div class="container mt-5">
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <h1 class="text-center">Rehber</h1>
-                    <p class="text-center"><a href="{{ url_for('logout') }}">Çıkış yap.</a></p>
+
+
+    <!-- Profil ikonu -->
+    <div class="profile-icon float-right">
+        <a href="#" role="button" id="profileDropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user-circle fa-2x"></i>
+        </a>
+        <!-- Profil ikonu için açılır menü -->
+        <div class="profile-dropdown">
+            <a class="dropdown-item" href="{{ url_for('profil', user_id=user_id) }}">Profilim</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{{ url_for('logout') }}">Çıkış</a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <form method="post">
+
+            {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <td><a href="#" onclick="addAdres()"><button type="button" class="btn btn-success">Adres
+                        Ekle</button></a>
+            </td>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Ad</th>
+                        <th>Soyad</th>
+                        <th>Numara</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td><input type="text" value="{{ user.id }}" id="id" name="id" class="form-control"
+                            style="width: auto;" readonly></td>
+                    <td><input type="text" value="{{ user.ad }}" id="ad" name="ad" class="form-control" readonly>
+                    </td>
+                    <td><input type="text" value="{{ user.soyad }}" id="soyad" name="soyad" class="form-control"
+                            readonly>
+                    </td>
+                    <td><input type="text" value="{{ user.numara }}" id="numara" name="numara" class="form-control"
+                            readonly>
+                    </td>
+                    <td>
+                </tr>
+
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Mail</th>
+                        <th>Adres Adı</th>
+                        <th>İl</th>
+                        <th>İlçe</th>
+                        <th>Adres</th>
+                        <th>Rehber İd</th>
+                        <th>Adres Güncelle</th>
+                        <th>Adres Sil</th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for adres in addresses %}
+                    <tr>
+                        <td><input type="text" value="{{ adres.id }}" id="id" name="id" class="form-control"
+                                style="width: auto;" readonly></td>
+                        <td><input type="text" value="{{ adres.mail }}" id="mail" name="mail" class="form-control"
+                                style="width: auto;" readonly>
+                        </td>
+                        <td><input type="text" value="{{ adres.adres_adi }}" id="adres_adi" name="adres_adi"
+                                class="form-control" style="width: auto;" readonly>
+                        </td>
+                        <td><input type="text" value="{{ adres.il }}" id="il" name="il" class="form-control"
+                                style="width: auto;" readonly>
+                        </td>
+                        <td><input type="text" value="{{ adres.ilce }}" id="ilce" name="ilce" class="form-control"
+                                style="width: auto;" readonly></td>
+                        <td><input type="text" value="{{ adres.adres }}" id="adres" name="adres" class="form-control"
+                                style="width: auto;" readonly></td>
+
+                        <td><input type="text" value="{{ adres.rehber_id }}" id="rehber_id" name="rehber_id"
+                                class="form-control" style="width: auto;" readonly></td>
+                        <td><a href="#"
+                                onclick="editAdres('{{ adres.rehber_id }}', '{{ adres.id }}', '{{ adres.adres_adi }}', '{{ adres.il }}','{{adres.ilce}}','{{adres.adres}}','{{adres.mail}}')"
+                                data-toggle="modal" data-target="#editAdresModal">
+                                <button type="button" class="btn btn-info">Güncelle</button>
+                            </a>
+                        </td>
+                        <td><a href="#"
+                                onclick="deleteAdres('{{ adres.rehber_id }}', '{{ adres.id }}', '{{ adres.adres_adi }}', '{{ adres.il }}','{{adres.ilce}}','{{adres.adres}}','{{adres.mail}}')"><button
+                                    type="button" class="btn btn-danger">Sil</button></a></td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+
+
+        </form>
+    </div>
+
+    <!-- Modal for delete adres Data -->
+    <div class="modal fade" id="deleteAdresModal" tabindex="-1" role="dialog" aria-labelledby="deleteAdresModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteAdresModalLabel">Adres Sil</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
+                <div class="modal-body">
+                    <form method="post" action="{{ url_for('deleteAdres',id=user.id) }}">
+                        <input type="hidden" id="deleteRehber_id" name="rehber_id">
+                        <div class="form-group">
+                            <label for="deleteAdres_adi">Adres Başlığı</label>
+                            <input type="text" class="form-control" id="deleteAdres_adi" name="adres_adi">
+                        </div>
+                        <div class="form-group">
+                            <label for="deleteAdresIl">İl</label>
+                            <input type="text" class="form-control" id="deleteAdresIl" name="il">
+                        </div>
+                        <div class="form-group">
+                            <label for="deleteAdresIlce">İlçe</label>
+                            <input type="text" class="form-control" id="deleteAdresIlce" name="ilce">
+                        </div>
+                        <div class="form-group">
+                            <label for="deleteAdresAdres">Adres</label>
+                            <input type="text" class="form-control" id="deleteAdresAdres" name="adres">
+                        </div>
+                        <div class="form-group">
+                            <label for="deleteAdresMail">Mail</label>
+                            <input type="text" class="form-control" id="deleteAdresMail" name="mail">
+                        </div>
+
+                        <button type="submit" class="btn btn-danger">Sil</button>
+                    </form>
+                </div>
+
             </div>
         </div>
-
-
-        <div class="table-container">
-            <form method="post">
-
-                {% if error %}
-                <div class="alert alert-danger">{{ error }}</div>
-                {% endif %}
-
-                <td><a href="#" onclick="addAdres()"><button type="button" class="btn btn-success">Adres
-                            Ekle</button></a>
-                </td>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Ad</th>
-                            <th>Soyad</th>
-                            <th>Numara</th>
-                        </tr>
-                        <tr>
-                            <td><input type="text" value="{{ user.id }}" id="id" name="id" class="form-control"
-                                    style="width: auto;" readonly></td>
-                            <td><input type="text" value="{{ user.ad }}" id="ad" name="ad" class="form-control"
-                                    readonly>
-                            </td>
-                            <td><input type="text" value="{{ user.soyad }}" id="soyad" name="soyad" class="form-control"
-                                    readonly>
-                            </td>
-                            <td><input type="text" value="{{ user.numara }}" id="numara" name="numara"
-                                    class="form-control" readonly>
-                            </td>
-                            <td>
-                        </tr>
-
-
-                        <tr>
-                            <th>Id</th>
-                            <th>Mail</th>
-                            <th>Adres Adı</th>
-                            <th>İl</th>
-                            <th>İlçe</th>
-                            <th>Adres</th>
-                            <th>Rehber İd</th>
-                            <th>Adres Güncelle</th>
-                            <th>Adres Sil</th>
-
-
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        {% for adres in addresses %}
-                        <tr>
-                            <td><input type="text" value="{{ adres.id }}" id="id" name="id" class="form-control"
-                                    style="width: auto;" readonly></td>
-                            <td><input type="text" value="{{ adres.mail }}" id="mail" name="mail" class="form-control"
-                                    style="width: auto;" readonly>
-                            </td>
-                            <td><input type="text" value="{{ adres.adres_adi }}" id="adres_adi" name="adres_adi"
-                                    class="form-control" style="width: auto;" readonly>
-                            </td>
-                            <td><input type="text" value="{{ adres.il }}" id="il" name="il" class="form-control"
-                                    style="width: auto;" readonly>
-                            </td>
-                            <td><input type="text" value="{{ adres.ilce }}" id="ilce" name="ilce" class="form-control"
-                                    style="width: auto;" readonly></td>
-                            <td><input type="text" value="{{ adres.adres }}" id="adres" name="adres"
-                                    class="form-control" style="width: auto;" readonly></td>
-
-                            <td><input type="text" value="{{ adres.rehber_id }}" id="rehber_id" name="rehber_id"
-                                    class="form-control" style="width: auto;" readonly></td>
-                            <td><a href="#"
-                                    onclick="editAdres('{{ adres.rehber_id }}', '{{ adres.id }}', '{{ adres.adres_adi }}', '{{ adres.il }}','{{adres.ilce}}','{{adres.adres}}','{{adres.mail}}')"
-                                    data-toggle="modal" data-target="#editAdresModal">
-                                    <button type="button" class="btn btn-info">Güncelle</button>
-                                </a>
-                            </td>
-                            <td><a href="#"
-                                    onclick="deleteAdres('{{ adres.rehber_id }}', '{{ adres.id }}', '{{ adres.adres_adi }}', '{{ adres.il }}','{{adres.ilce}}','{{adres.adres}}','{{adres.mail}}')"><button
-                                        type="button" class="btn btn-danger">Sil</button></a></td>
-
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-
-                </table>
+    </div>
 
 
 
-            </form>
-        </div>
-
-        <!-- Modal for delete adres Data -->
-        <div class="modal fade" id="deleteAdresModal" tabindex="-1" role="dialog"
-            aria-labelledby="deleteAdresModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteAdresModalLabel">Adres Sil</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="post" action="{{ url_for('deleteAdres',id=user.id) }}">
-                            <input type="hidden" id="deleteRehber_id" name="rehber_id">
-                            <div class="form-group">
-                                <label for="deleteAdres_adi">Adres Başlığı</label>
-                                <input type="text" class="form-control" id="deleteAdres_adi" name="adres_adi">
-                            </div>
-                            <div class="form-group">
-                                <label for="deleteAdresIl">İl</label>
-                                <input type="text" class="form-control" id="deleteAdresIl" name="il">
-                            </div>
-                            <div class="form-group">
-                                <label for="deleteAdresIlce">İlçe</label>
-                                <input type="text" class="form-control" id="deleteAdresIlce" name="ilce">
-                            </div>
-                            <div class="form-group">
-                                <label for="deleteAdresAdres">Adres</label>
-                                <input type="text" class="form-control" id="deleteAdresAdres" name="adres">
-                            </div>
-                            <div class="form-group">
-                                <label for="deleteAdresMail">Mail</label>
-                                <input type="text" class="form-control" id="deleteAdresMail" name="mail">
-                            </div>
-
-                            <button type="submit" class="btn btn-danger">Sil</button>
-                        </form>
-                    </div>
-
+    <!-- Modal for insert adres Data -->
+    <div class="modal fade" id="addAdresModal" tabindex="-1" role="dialog" aria-labelledby="addAdresModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addAdresModalLabel">Adres Ekle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </div>
-        </div>
+                <div class="modal-body">
 
-
-
-        <!-- Modal for insert adres Data -->
-        <div class="modal fade" id="addAdresModal" tabindex="-1" role="dialog" aria-labelledby="addAdresModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addAdresModalLabel">Adres Ekle</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-
-                        <!-- 
+                    <!-- 
                             form actionda rehber id yi add_adres endpoint ine yolluyor
                           -->
-                        <form method="post" action="{{ url_for('add_adres',rehber_id=user.id) }}">
-                            <input type="hidden" id="rehber_id" name="id">
-                            <div class="form-group">
-                                <label for="addAdres">Adres Başlığı</label>
-                                <input type="text" class="form-control" id="addAdres" name="adres_adi">
-                            </div>
-                            <div class="form-group">
-                                <label for="addAdres">İl</label>
-                                <input type="text" class="form-control" id="addAdres" name="il">
-                            </div>
-                            <div class="form-group">
-                                <label for="addAdres">İlçe</label>
-                                <input type="text" class="form-control" id="addAdres" name="ilce">
-                            </div>
-                            <div class="form-group">
-                                <label for="addAdres">Adres</label>
-                                <input type="text" class="form-control" id="addAdres" name="adres">
-                            </div>
-                            <div class="form-group">
-                                <label for="addAdres">Mail</label>
-                                <input type="text" class="form-control" id="addAdres" name="mail">
-                            </div>
+                    <form method="post" action="{{ url_for('add_adres',rehber_id=user.id) }}">
+                        <input type="hidden" id="rehber_id" name="id">
+                        <div class="form-group">
+                            <label for="addAdres">Adres Başlığı</label>
+                            <input type="text" class="form-control" id="addAdres" name="adres_adi">
+                        </div>
+                        <div class="form-group">
+                            <label for="addAdres">İl</label>
+                            <input type="text" class="form-control" id="addAdres" name="il">
+                        </div>
+                        <div class="form-group">
+                            <label for="addAdres">İlçe</label>
+                            <input type="text" class="form-control" id="addAdres" name="ilce">
+                        </div>
+                        <div class="form-group">
+                            <label for="addAdres">Adres</label>
+                            <input type="text" class="form-control" id="addAdres" name="adres">
+                        </div>
+                        <div class="form-group">
+                            <label for="addAdres">Mail</label>
+                            <input type="text" class="form-control" id="addAdres" name="mail">
+                        </div>
 
-                            <button type="submit" class="btn btn-success">Adres Ekle</button>
-                        </form>
-                    </div>
+                        <button type="submit" class="btn btn-success">Adres Ekle</button>
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Modal for update adres Data -->
-        <div class="modal fade" id="editAdresModal" tabindex="-1" role="dialog" aria-labelledby="editAdresModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editAdresModalLabel">Adres Güncelle</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="post" action="{{ url_for('updateAdres') }}">
-                            <input type="hidden" id="editUserId" name="id">
-                            <input type="hidden" id="editUserRehber_Id" name="rehber_id">
-                            <div class="form-group">
-                                <label for="editAdresAd">Adres Başlığı</label>
-                                <input type="text" class="form-control" id="editAdresAd" name="adres_adi">
-                            </div>
-                            <div class="form-group">
-                                <label for="editAdresIl">İl</label>
-                                <input type="text" class="form-control" id="editAdresIl" name="il">
-                            </div>
-                            <div class="form-group">
-                                <label for="editAdresIlce">İlçe</label>
-                                <input type="text" class="form-control" id="editAdresIlce" name="ilce">
-                            </div>
-                            <div class="form-group">
-                                <label for="editAdresAdres">Adres</label>
-                                <input type="text" class="form-control" id="editAdresAdres" name="adres">
-                            </div>
-                            <div class="form-group">
-                                <label for="editAdresMail">Mail</label>
-                                <input type="text" class="form-control" id="editAdresMail" name="mail">
-                            </div>
-                            <button type="submit" class="btn btn-info">Güncelle</button>
-                        </form>
-                    </div>
+    <!-- Modal for update adres Data -->
+    <div class="modal fade" id="editAdresModal" tabindex="-1" role="dialog" aria-labelledby="editAdresModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editAdresModalLabel">Adres Güncelle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{{ url_for('updateAdres') }}">
+                        <input type="hidden" id="editUserId" name="id">
+                        <input type="hidden" id="editUserRehber_Id" name="rehber_id">
+                        <div class="form-group">
+                            <label for="editAdresAd">Adres Başlığı</label>
+                            <input type="text" class="form-control" id="editAdresAd" name="adres_adi">
+                        </div>
+                        <div class="form-group">
+                            <label for="editAdresIl">İl</label>
+                            <input type="text" class="form-control" id="editAdresIl" name="il">
+                        </div>
+                        <div class="form-group">
+                            <label for="editAdresIlce">İlçe</label>
+                            <input type="text" class="form-control" id="editAdresIlce" name="ilce">
+                        </div>
+                        <div class="form-group">
+                            <label for="editAdresAdres">Adres</label>
+                            <input type="text" class="form-control" id="editAdresAdres" name="adres">
+                        </div>
+                        <div class="form-group">
+                            <label for="editAdresMail">Mail</label>
+                            <input type="text" class="form-control" id="editAdresMail" name="mail">
+                        </div>
+                        <button type="submit" class="btn btn-info">Güncelle</button>
+                    </form>
                 </div>
             </div>
         </div>
-
-
-
     </div>
-    </div>
+
+
+
+
+
 
     <!-- Add Bootstrap and jQuery JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

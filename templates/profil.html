@@ -4,38 +4,91 @@
 <head>
     <meta charset="utf-8">
     <title>Şifre Değiştirme</title>
+
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+<style>
+    .profile-icon {
+        position: relative;
+        cursor: pointer;
+    }
+
+    .profile-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        z-index: 999;
+        min-width: 150px;
+        padding: 10px;
+        background-color: #fff;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+        display: none;
+        text-align: center;
+        /* Açılan menüyü sağ tarafa doğru hizala */
+    }
+
+    .profile-icon:hover .profile-dropdown {
+        display: block;
+    }
+</style>
 
 <body>
+    <!-- Geri dönüş butonu -->
+    <a href="{{url_for('list',user_id=user_id)}}" class="btn btn-primary"><i class="fas fa-chevron-left"></i> Geri
+        Dön</a>
+    <!-- Profil ikonu -->
+    <div class="profile-icon float-right">
+        <a href="#" role="button" id="profileDropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user-circle fa-2x"></i>
+        </a>
+        <!-- Profil ikonu için açılır menü -->
+        <div class="profile-dropdown">
+            <a class="dropdown-item" href="{{ url_for('profil', user_id=user_id) }}">Profilim</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{{ url_for('logout') }}">Çıkış</a>
+        </div>
+    </div>
     <div class="container mt-5">
         <h3>Şifre Değiştirme</h3>
+        {% if error %}
+        <div class="alert alert-danger mt-3">{{ error }}</div>
+        {% endif %}
         <table class="table mt-4">
-            <form>
+            <form method="POST" action="{{ url_for('profilsifre', user_id=user_id) }}">
+
                 <tbody>
                     <tr>
                         <td>Mevcut Şifre:</td>
-                        <td><input type="password" class="form-control" id="mevcutSifre" placeholder="Mevcut Şifre">
+                        <td><input type="password" class="form-control" id="mevcutSifre" name="mevcutSifre"
+                                placeholder="Mevcut Şifre" required>
                         </td>
                     </tr>
                     <tr>
                         <td>Yeni Şifre:</td>
-                        <td><input type="password" class="form-control" id="yeniSifre" placeholder="Yeni Şifre"></td>
+                        <td><input type="password" class="form-control" id="yeniSifre" name="yeniSifre"
+                                placeholder="Yeni Şifre" required></td>
                     </tr>
                     <tr>
                         <td>Yeni Şifre (Tekrar):</td>
-                        <td><input type="password" class="form-control" id="yeniSifreTekrar"
-                                placeholder="Yeni Şifre (Tekrar)"></td>
+                        <td><input type="password" class="form-control" id="yeniSifreTekrar" name="yeniSifreTekrar"
+                                placeholder="Yeni Şifre (Tekrar)" required></td>
                     </tr>
+
                     <tr>
-                        <td colspan="2" align="right"><button type="button" class="btn btn-primary">Şifreyi
+                        <td colspan="2" align="right"><button type="submit" class="btn btn-primary">Şifreyi
                                 Değiştir</button>
                         </td>
                     </tr>
+
                 </tbody>
             </form>
         </table>
+
+
+
     </div>
 
     <!-- Bootstrap JS -->

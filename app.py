@@ -80,9 +80,9 @@ def login():
         # Şifreyi şifreleme
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
         user = User.query.filter_by(username=username, password=hashed_password).first()
-        user_id = user.id
         if user is not None:
             login_user(user, remember=True)
+            user_id = user.id
             return redirect(url_for("list", user_id=user_id))
         else:
             error = "Kullanıcı adı veya şifre hatalı."
@@ -272,12 +272,46 @@ def deleteAdres():
     return redirect(url_for("adres", rehber_id=rehber_id))
 
 
-# profil sayfasında kullanıcı şifresi değiştirme
+# profil sayfası
 @app.route("/profil", methods=["GET", "POST"])
 @login_required
 def profil():
     user_id = request.args.get("user_id")
+    # print(user_id)
     return render_template("profil.html", user_id=user_id)
+
+
+@app.route("/profilsifre", methods=["GET", "POST"])
+@login_required
+def profilsifre():
+    user_id = request.args.get("user_id")
+    print(user_id)
+    if request.method == "POST":
+        kullanici = User.query.filter_by(id=user_id).first()
+        if kullanici is not None:
+            mevcutSifre = request.form["mevcutSifre"]
+            hashed_password = hashlib.sha256(mevcutSifre.encode()).hexdigest()
+            yeniSifre = request.form["yeniSifre"]
+            yeniSifreTekrar = request.form["yeniSifreTekrar"]
+            # şifre hashlib ile şifrelenmeli
+            if kullanici.password == hashed_password:
+                if yeniSifre == yeniSifreTekrar:
+                    # yeni şifreler eşleşiyorsa şifre güncellenmeli
+                    # yeni şifre hashlib ile şifrelenmeli ve kaydedilmeli
+                    yeniSifre = hashlib.sha256(yeniSifre.encode()).hexdigest()
+                    kullanici.password = yeniSifre
+                    db.session.commit()
+                    return redirect(url_for("adres", user_id=user_id))
+                else:
+                    error = "Girdiğiniz yeni şifreler uyuşmuyor"
+                    return render_template("profil.html", error=error, user_id=user_id)
+            else:
+                error = "Mevcut şifreniz hatalı"
+                return render_template("profil.html", error=error, user_id=user_id)
+
+        else:
+            error = "Kullanıcı bulunamadı"
+            return render_template("profil.html", error=error, user_id=user_id)
 
 
 # sayfa içi arama kısımı
