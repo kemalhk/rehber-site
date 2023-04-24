@@ -3,6 +3,7 @@
 
 <head>
     <title>Listeleme</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Add Bootstrap CSS -->
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -67,6 +68,37 @@
         </div>
     </div>
 
+    <h1>Kullanıcı Listesi</h1>
+    <input type="text" id="adInput" placeholder="Adı Girin">
+    <ul id="list"></ul>
+
+    <script>
+        // Arama inputunu dinleme
+        $('#adInput').on('input', function () {
+            var ad = $(this).val();
+
+            // Arama sonuçlarını getirme
+            $.ajax({
+                url: '/arama',
+                type: 'POST',
+                data: { 'ad': ad },
+                success: function (sonuclar) {
+                    // Sonuçları listeleme
+                    $('#list').empty();
+                    if (sonuclar.length > 0) {
+                        var table = '<table><tr><th>ID</th><th>Ad</th><th>Soyad</th><th>Numara</th></tr>';
+                        $.each(sonuclar, function (index, kayit) {
+                            table += '<tr><td>' + kayit.id + '</td><td>' + kayit.ad + '</td><td>' + kayit.soyad + '</td><td>' + kayit.numara + '</td></tr>';
+                        });
+                        table += '</table>';
+                        $('#list').append(table);
+                    } else {
+                        $('#list').append('<p>Sonuç bulunamadı.</p>');
+                    }
+                }
+            });
+        });
+    </script>
 
     <div class="table-container">
         <form method="post">
@@ -123,7 +155,7 @@
                         <td><a href="#"
                                 onclick="deleteUser('{{ user.id }}', '{{ user.ad }}', '{{ user.soyad }}', '{{ user.numara }}')"><button
                                     type="button" class="btn btn-danger">Sil</button></a></td>
-                        <td><a href="{{url_for('adres',rehber_id=user.id,user_id=user_id)}}"><button type="button"
+                        <td><a href="{{url_for('adres',rehber_id=user.id)}}"><button type="button"
                                     class="btn btn-success">Adres İşlemleri</button></a></td>
 
                     </tr>
@@ -142,7 +174,14 @@
                     {% endif %}
                 </ul>
 
-
+                <!-- <ul>
+                    {% if sayfa_numarasi > 1 %}
+                    <li><a href="{{ url_for('list', sayfa_numarasi=sayfa_numarasi-1) }}">Önceki</a></li>
+                    {% endif %}
+                    {% if toplam_sayfa_sayisi > sayfa_numarasi %}
+                    <li><a href="{{ url_for('list', sayfa_numarasi=sayfa_numarasi+1) }}">Sonraki</a></li>
+                    {% endif %}
+                </ul> -->
             </nav>
 
         </form>
@@ -298,9 +337,8 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.9/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <!-- Script for Editing User Data in Modal -->
     <script>
         function editUser(id, ad, soyad, numara) {

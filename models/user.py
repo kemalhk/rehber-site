@@ -35,12 +35,21 @@ class Rehber(db.Model):
     numara = db.Column(db.String(50), unique=True, nullable=False)
     adresses = db.relationship("Adres", backref="Rehber", lazy=True)
 
+    def to_dict(self):
+        """Rehber nesnesini sözlük (dictionary) formatında döndürür."""
+        return {
+            "id": self.id,
+            "ad": self.ad,
+            "soyad": self.soyad,
+            "numara": self.numara,
+        }
+
 
 class Adres(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     mail = db.Column(db.String(120), unique=True, nullable=False)
-    adres_adi=db.Column(db.String(30),nullable=False)
-    il=db.Column(db.String(20),nullable=False)
-    ilce=db.Column(db.String(25),nullable=False)
-    adres=db.Column(db.String(90),nullable=False) 
+    adres_adi = db.Column(db.String(30), nullable=False)
+    il = db.Column(db.String(20), nullable=False)
+    ilce = db.Column(db.String(25), nullable=False)
+    adres = db.Column(db.String(90), nullable=False)
     rehber_id = db.Column(db.Integer, db.ForeignKey("rehber.id"), nullable=False)
