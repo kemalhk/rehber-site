@@ -51,8 +51,9 @@
 </style>
 
 <body>
-
-
+    <!-- Geri dönüş butonu -->
+    <a href="{{url_for('list',user_id=user_id)}}" class="btn btn-primary"><i class="fas fa-chevron-left"></i> Geri
+        Dön</a>
     <!-- Profil ikonu -->
     <div class="profile-icon float-right">
         <a href="#" role="button" id="profileDropdown" aria-haspopup="true" aria-expanded="false">
@@ -151,7 +152,22 @@
                 </tbody>
 
             </table>
+            <nav>
+                <ul>
+                    {% if sayfa_numarasi > 1 %}
+                    <li><a
+                            href="{{ url_for('adres', sayfa_numarasi=sayfa_numarasi-1,user_id=user_id,rehber_id=rehber_id) }}">Önceki</a>
+                    </li>
+                    {% endif %}
+                    {% if toplam_sayfa_sayisi > sayfa_numarasi %}
+                    <li><a
+                            href="{{ url_for('adres', sayfa_numarasi=sayfa_numarasi+1,user_id=user_id,rehber_id=rehber_id) }}">Sonraki</a>
+                    </li>
+                    {% endif %}
+                </ul>
 
+
+            </nav>
 
 
         </form>

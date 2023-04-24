@@ -183,15 +183,41 @@ def update():
 @app.route("/adres", methods=["GET", "POST"])
 @login_required
 def adres():
+    user_id = request.args.get("user_id")  # URL'den user_id parametresini al
     rehber_id = request.args.get("rehber_id")  # URL'den rehber_id parametresini al
     if rehber_id is None:
         return redirect(url_for("list"))
     user = Rehber.query.filter_by(id=rehber_id).first()  # seçilen kullanıcıyı bul
     addresses = Adres.query.filter_by(rehber_id=rehber_id).all()  # kayıtları listele
+    #####################
+
+    # sayfalama islemi
+    sayfa_numarasi = request.args.get(
+        "sayfa_numarasi", 1, type=int
+    )  # URL'den sayfa numarasını al, varsayılan olarak 1
+    sayfa_basi_oge_sayisi = 3
+    offset = (sayfa_numarasi - 1) * sayfa_basi_oge_sayisi
+    limit = sayfa_basi_oge_sayisi
+    users = Rehber.query.offset(offset).limit(limit).all()  #  sayfalara böl
+    addresses = (
+        Adres.query.filter_by(rehber_id=rehber_id).offset(offset).limit(limit).all()
+    )  # Sayfalı kayıtları al
+    toplam_oge_sayisi = Adres.query.filter_by(
+        rehber_id=rehber_id
+    ).count()  # toplam kayıt sayısını hesapla
+    toplam_sayfa_sayisi = int(
+        math.ceil(toplam_oge_sayisi / sayfa_basi_oge_sayisi)
+    )  # Toplam sayfa sayısını hesapla
+
+    ########################
     return render_template(
         "adres.html",
         user=user,
         addresses=addresses or [],  # [] adres boş geliyorsa listeleme için
+        toplam_sayfa_sayisi=toplam_sayfa_sayisi,
+        sayfa_numarasi=sayfa_numarasi,
+        user_id=user_id,
+        rehber_id=rehber_id,  # yukarıdaki if kontrolünden geçip adres listelemesinde sayfalama işlemi için yolluyor
     )
 
 
@@ -281,6 +307,7 @@ def profil():
     return render_template("profil.html", user_id=user_id)
 
 
+# profil şifre değiştirme işlemleri
 @app.route("/profilsifre", methods=["GET", "POST"])
 @login_required
 def profilsifre():

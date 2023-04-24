@@ -134,21 +134,15 @@
             <nav>
                 <ul>
                     {% if sayfa_numarasi > 1 %}
-                    <li><a href="{{ url_for('list', sayfa_numarasi=sayfa_numarasi-1) }}">Önceki</a></li>
+                    <li><a href="{{ url_for('list', sayfa_numarasi=sayfa_numarasi-1,user_id=user_id) }}">Önceki</a></li>
                     {% endif %}
                     {% if toplam_sayfa_sayisi > sayfa_numarasi %}
-                    <li><a href="{{ url_for('list', sayfa_numarasi=sayfa_numarasi+1) }}">Sonraki</a></li>
+                    <li><a href="{{ url_for('list', sayfa_numarasi=sayfa_numarasi+1,user_id=user_id) }}">Sonraki</a>
+                    </li>
                     {% endif %}
                 </ul>
 
-                <!-- <ul>
-                    {% if sayfa_numarasi > 1 %}
-                    <li><a href="{{ url_for('list', sayfa_numarasi=sayfa_numarasi-1) }}">Önceki</a></li>
-                    {% endif %}
-                    {% if toplam_sayfa_sayisi > sayfa_numarasi %}
-                    <li><a href="{{ url_for('list', sayfa_numarasi=sayfa_numarasi+1) }}">Sonraki</a></li>
-                    {% endif %}
-                </ul> -->
+
             </nav>
 
         </form>
