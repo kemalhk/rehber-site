@@ -86,6 +86,7 @@
 
 
 
+            <!-- Tablo başlangıcı -->
             <table class="table" id="userTable">
                 <thead>
                     <tr>
@@ -101,6 +102,7 @@
                     </tr>
                 </thead>
                 <tbody id="userList">
+                    <!-- Kullanıcılar listesi döngüsü başlangıcı -->
                     {% for user in users %}
                     <tr>
                         <td><input type="text" value="{{ user.id }}" id="id" name="id" class="form-control"
@@ -114,7 +116,6 @@
                                 readonly>
                         </td>
                         <td>
-
                             <select class="form-select" aria-label="Default select example">
                                 {% for adress in user.adresses %}
                                 <option value="{{ adress.adres_adi }}" id="adres_adi" name="adres_adi">{{
@@ -134,8 +135,11 @@
 
                     </tr>
                     {% endfor %}
+                    <!-- Kullanıcılar listesi döngüsü bitişi -->
                 </tbody>
             </table>
+            <!-- Tablo bitişi -->
+
             <!-- Ajax isteği -->
             <script>
                 // Arama inputunu dinleme
@@ -152,21 +156,35 @@
                             if (sonuclar.length > 0) {
                                 $.each(sonuclar, function (index, user) {
                                     var newRow = '<tr>' +
-                                        '<td><input type="text" value="' + user.id + '" id="id" name="id" class="form-control" style="width: auto;" readonly></td>' +
-                                        '<td><input type="text" value="' + user.ad + '" id="ad" name="ad" class="form-control" readonly></td>' +
-                                        '<td><input type="text" value="' + user.soyad + '" id="soyad" name="soyad" class="form-control" readonly></td>' +
-                                        '<td><input type="text" value="' + user.numara + '" id="numara" name="numara" class="form-control" readonly></td>' +
-                                        '<td></td>' + // Boş bir hücre eklemek isterseniz buraya kod ekleyebilirsiniz
+                                        '<td>' + user.id + '</td>' +
+                                        '<td>' + user.ad + '</td>' +
+                                        '<td>' + user.soyad + '</td>' +
+                                        '<td>' + user.numara + '</td>' +
+                                        '<td><select class="form-select" aria-label="Default select example">';
+                                    $.each(user.adresses, function (index, adress) {
+                                        newRow += '<option value="' + adress.adres_adi + '">' + adress.adres_adi + '</option>';
+                                    });
+                                    newRow += '</select></td>' +
+                                        '<td><a href="#" onclick="editUser(\'' + user.id + '\', \'' + user.ad + '\', \'' + user.soyad + '\', \'' + user.numara + '\')"><button type="button" class="btn btn-info">Güncelle</button></a></td>' +
+                                        '<td><a href="#" onclick="deleteUser(\'' + user.id + '\', \'' + user.ad + '\', \'' + user.soyad + '\', \'' + user.numara + '\')"><button type="button" class="btn btn-danger">Sil</button></a></td>' +
+                                        '<td><a href="/adres?rehber_id=' + user.id + '"><button type="button" class="btn btn-success">Adres İşlemleri</button></a></td>' +
                                         '</tr>';
                                     $('#userList').append(newRow);
                                 });
                             } else {
-                                $('#userList').append('<tr><td colspan="5">Sonuç bulunamadı.</td></tr>');
+                                var newRow = '<tr>' +
+                                    '<td colspan="8" align="center">Kullanıcı bulunamadı</td>' +
+                                    '</tr>';
+                                $('#userList').append(newRow);
                             }
                         }
                     });
                 });
             </script>
+
+
+
+
             <hr>
             <nav>
                 <ul>
