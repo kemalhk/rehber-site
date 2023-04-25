@@ -7,6 +7,7 @@ from flask import (
     abort,
     Response,
 )
+
 from flask import jsonify
 from flask_sqlalchemy import SQLAlchemy
 from .models.user import User, db, Rehber, Adres
@@ -14,6 +15,7 @@ from flask_paginate import Pagination, get_page_parameter, get_page_args
 from http import HTTPStatus
 import math
 import hashlib
+from sqlalchemy import or_
 
 from flask_login import (
     LoginManager,
@@ -350,34 +352,22 @@ def profilsifre():
             return render_template("profil.html", error=error, user_id=user_id)
 
 
-# search
-""" @app.route("/fetchrecords", methods=["POST", "GET"])
-@login_required
-def fetchrecords():
-    if request.method == "POST":
-        query = request.form["query"]
-        if query == "":
-            users = Rehber.query.order_by(Rehber.id.desc()).all()
-        else:
-            search_text = request.form["query"]
-            users = (
-                Rehber.query.filter(Rehber.office.in_([search_text]))
-                .order_by(Rehber.id.desc())
-                .all()
-            )
-        return jsonify({"list": render_template("list.html", users=users)})
-    return render_template(
-        "list.html"
-    )  # Ekranda gösterilecek bir form sayfası döndürebilirsiniz """
-
-
 # Arama endpointi
 @app.route("/arama", methods=["POST", "GET"])
+@login_required
 def arama():
     if request.method == "POST":
-        ad = request.form["ad"]  # Gelen ad değerini alın
+        arama_verisi = request.form["ad"]  # Gelen ad değerini alın
         # Veritabanında ad değerine göre arama yapın ve sonuçları alın
-        sonuclar = Rehber.query.filter_by(ad=ad).all()
+        # sonuclar = Rehber.query.filter_by(ad=ad).all()
+        # sonuclar = Rehber.query.filter(Rehber.ad.like(f"%{arama_verisi}%")).all()
+        sonuclar = Rehber.query.filter(
+            or_(
+                Rehber.ad.like(f"%{arama_verisi}%"),
+                Rehber.soyad.like(f"%{arama_verisi}%"),
+                Rehber.numara.like(f"%{arama_verisi}%"),
+            )
+        ).all()
         # Rehber nesnesini JSON formatına dönüştürün
         sonuclar_json = [rehber.to_dict() for rehber in sonuclar]
         # Sonuçları JSON formatında döndürün
