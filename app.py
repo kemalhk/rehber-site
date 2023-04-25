@@ -357,6 +357,7 @@ def profilsifre():
 @login_required
 def arama():
     if request.method == "POST":
+        addresses = Adres.query.all()
         arama_verisi = request.form["ad"]  # Gelen ad değerini alın
         # Veritabanında ad değerine göre arama yapın ve sonuçları alın
         # sonuclar = Rehber.query.filter_by(ad=ad).all()

@@ -72,33 +72,7 @@
     <input type="text" id="adInput" placeholder="Adı Girin">
 
 
-    <script>
-        // Arama inputunu dinleme
-        $('#adInput').on('input', function () {
-            var ad = $(this).val();
 
-            // Arama sonuçlarını getirme
-            $.ajax({
-                url: '/arama',
-                type: 'POST',
-                data: { 'ad': ad },
-                success: function (sonuclar) {
-                    // Sonuçları listeleme
-                    $('#list').empty();
-                    if (sonuclar.length > 0) {
-                        var table = '<table><tr><th>ID</th><th>Ad</th><th>Soyad</th><th>Numara</th></tr>';
-                        $.each(sonuclar, function (index, kayit) {
-                            table += '<tr><td>' + kayit.id + '</td><td>' + kayit.ad + '</td><td>' + kayit.soyad + '</td><td>' + kayit.numara + '</td></tr>';
-                        });
-                        table += '</table>';
-                        $('#list').append(table);
-                    } else {
-                        $('#list').append('<p>Sonuç bulunamadı.</p>');
-                    }
-                }
-            });
-        });
-    </script>
 
     <div class="table-container">
         <form method="post">

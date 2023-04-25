@@ -53,3 +53,15 @@ class Adres(db.Model):
     ilce = db.Column(db.String(25), nullable=False)
     adres = db.Column(db.String(90), nullable=False)
     rehber_id = db.Column(db.Integer, db.ForeignKey("rehber.id"), nullable=False)
+
+    def to_dict(self):
+        """adres nesnesini sözlük (dictionary) formatında döndürür."""
+        return {
+            "id": self.id,
+            "mail": self.mail,
+            "adres_adi": self.adres_adi,
+            "il": self.il,
+            "ilce": self.ilce,
+            "adres": self.adres,
+            "rehber_id": self.rehber_id,
+        }
