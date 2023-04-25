@@ -197,7 +197,7 @@ def adres():
     user_id = request.args.get("user_id")  # URL'den user_id parametresini al
     rehber_id = request.args.get("rehber_id")  # URL'den rehber_id parametresini al
     if rehber_id is None:
-        return redirect(url_for("list"))
+        return redirect(url_for("list", user_id=user_id))
     user = Rehber.query.filter_by(id=rehber_id).first()  # seçilen kullanıcıyı bul
     addresses = Adres.query.filter_by(rehber_id=rehber_id).all()  # kayıtları listele
     #####################
