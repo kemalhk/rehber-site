@@ -156,10 +156,7 @@ def list():
     print(user_id)
     # users = Rehber.query.filter_by(ekleyen_user=user_id).all()
     if user_id is not None:
-        users = Rehber.query.filter(Rehber.ekleyen_user == user_id).all()
-
         addresses = Adres.query.filter(Adres.rehber_id == user_id).all()
-
         # sayfalama islemi
         sayfa_numarasi = request.args.get(
             "sayfa_numarasi", 1, type=int
@@ -386,6 +383,9 @@ def profilsifre():
 def arama():
     if request.method == "POST":
         user_id = session.get("user_id")
+        users = Rehber.query.filter(Rehber.ekleyen_user == user_id).all()
+        addresses = Adres.query.filter(Adres.rehber_id == user_id).all()
+
         addresses = Adres.query.all()
         arama_verisi = request.form["ad"]  # Gelen ad değerini alın
         # Veritabanında ad değerine göre arama yapın ve sonuçları alın
@@ -398,13 +398,13 @@ def arama():
                 Rehber.numara.like(f"%{arama_verisi}%"),
             )
         ).all()
-        adres_adi = Adres.query.filter(
-            or_(Adres.adres_adi.like(f"%{arama_verisi}%"))
-        ).all()
+        """ adres_adi = Adres.query.filter(
+            or_(Adres.adres_adi.like(f"%{arama_verisi}%")),
+        ).all() """
         # Rehber nesnesini JSON formatına dönüştürün
         sonuclar_json = [rehber.to_dict() for rehber in sonuclar]
         # Rehber nesnesini JSON formatına dönüştürün
-        sonuclar_json.extend([adress.to_dict() for adress in adres_adi])
+        """ sonuclar_json.extend([adress.to_dict() for adress in adres_adi]) """
         for sonuc in sonuclar_json:
             sonuc["user_id"] = user_id
 

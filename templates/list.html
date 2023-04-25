@@ -153,6 +153,7 @@
                         success: function (sonuclar) {
                             // Sonuçları listeleme
                             $('#userList').empty();
+                            debugger
                             if (sonuclar.length > 0) {
                                 $.each(sonuclar, function (index, user) {
                                     var newRow = '<tr>' +
@@ -161,11 +162,13 @@
                                         '<td><input type="text" class="form-control"  style="width: auto;" readonly value="' + user.soyad + '"></td>' +
                                         '<td><input type="text" class=form-control style="width: auto;" readonly value="' + user.numara + '"></td>' +
                                         '<td><select class="form-select" aria-label="Default select example">';
+
                                     $.each(user.adresses, function (index, adress) {
-                                        if (adress.adres_adi !== null && adress.adres_adi !== undefined) { // kontrol eklendi
-                                            newRow += '<option value="' + adress.adres_adi + '">' + adress.adres_adi + '</option>';
-                                        }
+
+                                        newRow += '<option value="' + adress.adres_adi + '">' + adress.adres_adi + '</option>';
+
                                     });
+
                                     newRow += '</select></td>' +
                                         '<td><a href="#" onclick="editUser(\'' + user.id + '\', \'' + user.ad + '\', \'' + user.soyad + '\', \'' + user.numara + '\')"><button type="button" class="btn btn-info">Güncelle</button></a></td>' +
                                         '<td><a href="#" onclick="deleteUser(\'' + user.id + '\', \'' + user.ad + '\', \'' + user.soyad + '\', \'' + user.numara + '\')"><button type="button" class="btn btn-danger">Sil</button></a></td>' +
@@ -184,6 +187,7 @@
                         }
                     });
                 });
+
             </script>
 
 
