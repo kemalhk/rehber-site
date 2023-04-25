@@ -226,7 +226,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="{{ url_for('update') }}">
+                    <form method="post" action="{{ url_for('update',user_id=user_id) }}">
                         <input type="hidden" id="editUserId" name="id">
                         <div class="form-group">
                             <label for="editUserAd">Ad</label>
@@ -259,7 +259,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="{{ url_for('deleteNumber') }}">
+                    <form method="post" action="{{ url_for('deleteNumber',user_id=user_id) }}">
                         <input type="hidden" id="deleteUserId" name="id">
                         <div class="form-group">
                             <label for="deleteUserAd">Ad</label>
@@ -293,7 +293,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="{{ url_for('addNumber') }}">
+                    <form method="post" action="{{ url_for('addNumber',user_id=user_id) }}">
                         <input type="hidden" id="addUserId" name="id">
                         <div class="form-group">
                             <label for="addUserAd">Ad</label>
@@ -326,7 +326,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="{{ url_for('add_adres') }}">
+                    <form method="post" action="{{ url_for('add_adres',user_id=user_id) }}">
                         <input type="hidden" id="rehber_id" name="id">
                         <div class="form-group">
                             <label for="addAdres">Adres Başlığı</label>

@@ -103,18 +103,19 @@ def login():
     return render_template("login.html")
 
 
-# telefon numarası ekleme
+# rehber e telefon numarası ekleme
 @app.route("/addNumber", methods=["GET", "POST"])
 @login_required
 def addNumber():
     if request.method == "POST":
-        user_id = request.args.get(
-            "user_id"
+        user_id = request.args.get("user_id")
+        print(
+            user_id
         )  # profil sayfasında işlem yapabilmek için loginden gelen id yi alıyoruz
         ad = request.form["ad"]
         soyad = request.form["soyad"]
         numara = request.form["numara"]
-        kayit = Rehber(ad=ad, soyad=soyad, numara=numara)
+        kayit = Rehber(ad=ad, soyad=soyad, numara=numara, ekleyen_user=user_id)
         db.session.add(kayit)
         db.session.commit()
         mesaj = "Kayıt başarıyla eklendi."
@@ -133,8 +134,10 @@ def deleteNumber():
         user = Rehber.query.get(id)
         # Rehber modeline bağlı olan Adres modellerini silme
         adresler = Adres.query.filter_by(rehber_id=id).all()
-        for adres in adresler:
-            db.session.delete(adres)
+        # adres kaydı varsa adres silmeyi yap
+        if adresler is not None:
+            for adres in adresler:
+                db.session.delete(adres)
         db.session.delete(user)
         # db.session.delete(adressil)
         db.session.commit()
@@ -142,38 +145,50 @@ def deleteNumber():
     return render_template("list.html", user_id=user_id)
 
 
-# test
-# Kayıt listeleme sayfası
+# rehber
+#  rehber Kayıt listeleme sayfası
 @app.route("/list", methods=["GET", "POST"])
 @login_required
 def list():
     user_id = request.args.get(
         "user_id"
     )  # profil sayfasında işlem yapabilmek için loginden gelen id yi alıyoruz
-    users = Rehber.query.all()
-    addresses = Adres.query.all()
+    print(user_id)
+    # users = Rehber.query.filter_by(ekleyen_user=user_id).all()
+    if user_id is not None:
+        users = Rehber.query.filter(Rehber.ekleyen_user == user_id).all()
 
-    # sayfalama islemi
-    sayfa_numarasi = request.args.get(
-        "sayfa_numarasi", 1, type=int
-    )  # URL'den sayfa numarasını al, varsayılan olarak 1
-    sayfa_basi_oge_sayisi = 3
-    offset = (sayfa_numarasi - 1) * sayfa_basi_oge_sayisi
-    limit = sayfa_basi_oge_sayisi
-    users = Rehber.query.offset(offset).limit(limit).all()  #  sayfalara böl
-    toplam_oge_sayisi = Rehber.query.count()  # toplam kayıtlar
-    toplam_sayfa_sayisi = int(
-        math.ceil(toplam_oge_sayisi / sayfa_basi_oge_sayisi)
-    )  # Toplam sayfa sayısını hesaplaa
+        addresses = Adres.query.filter(Adres.rehber_id == user_id).all()
 
-    return render_template(
-        "list.html",
-        users=users,
-        toplam_sayfa_sayisi=toplam_sayfa_sayisi,
-        sayfa_numarasi=sayfa_numarasi,
-        addresses=addresses,
-        user_id=user_id,
-    )
+        # sayfalama islemi
+        sayfa_numarasi = request.args.get(
+            "sayfa_numarasi", 1, type=int
+        )  # URL'den sayfa numarasını al, varsayılan olarak 1
+        sayfa_basi_oge_sayisi = 3
+        offset = (sayfa_numarasi - 1) * sayfa_basi_oge_sayisi
+        limit = sayfa_basi_oge_sayisi
+        users = (
+            Rehber.query.filter(Rehber.ekleyen_user == user_id)
+            .offset(offset)
+            .limit(limit)
+            .all()
+        )  #  sayfalara böl
+        # users = Rehber.query.offset(offset).limit(limit).all()  #  sayfalara böl
+        toplam_oge_sayisi = Rehber.query.filter_by(
+            ekleyen_user=user_id
+        ).count()  # toplam kayıtlar
+        toplam_sayfa_sayisi = int(
+            math.ceil(toplam_oge_sayisi / sayfa_basi_oge_sayisi)
+        )  # Toplam sayfa sayısını hesaplaa
+
+        return render_template(
+            "list.html",
+            users=users,
+            toplam_sayfa_sayisi=toplam_sayfa_sayisi,
+            sayfa_numarasi=sayfa_numarasi,
+            addresses=addresses,
+            user_id=user_id,
+        )
 
 
 # Kayıt güncelleme sayfası
@@ -248,14 +263,12 @@ def adres():
 def add_adres():
     user_id = request.args.get("user_id")
     rehber_id = request.args.get("rehber_id")  # URL'den rehber_id parametresini al
-    print(user_id)
+
     user = Rehber.query.filter_by(id=rehber_id).first()  # seçilen kullanıcıyı bul
 
     adres_adi = request.form["adres_adi"]
 
     if request.method == "POST":
-        print(rehber_id)
-
         user = Adres.query.filter_by(adres_adi=adres_adi, rehber_id=rehber_id).first()
         if user is None:
             adres_adi = request.form["adres_adi"]
