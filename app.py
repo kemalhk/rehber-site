@@ -95,6 +95,9 @@ def login():
 @login_required
 def addNumber():
     if request.method == "POST":
+        user_id = request.args.get(
+            "user_id"
+        )  # profil sayfasında işlem yapabilmek için loginden gelen id yi alıyoruz
         ad = request.form["ad"]
         soyad = request.form["soyad"]
         numara = request.form["numara"]
@@ -102,9 +105,9 @@ def addNumber():
         db.session.add(kayit)
         db.session.commit()
         mesaj = "Kayıt başarıyla eklendi."
-        return redirect(url_for("list"))
+        return redirect(url_for("list", user_id=user_id))
         # return render_template("addNumber.html", mesaj=mesaj)
-    return render_template("list.html")
+    return render_template("list.html", user_id=user_id)
 
 
 # Kayıt silme sayfası
@@ -112,6 +115,7 @@ def addNumber():
 @login_required
 def deleteNumber():
     if request.method == "POST":
+        user_id = request.args.get("user_id")
         id = request.form["id"]
         user = Rehber.query.get(id)
         # Rehber modeline bağlı olan Adres modellerini silme
@@ -121,8 +125,8 @@ def deleteNumber():
         db.session.delete(user)
         # db.session.delete(adressil)
         db.session.commit()
-        return redirect(url_for("list"))
-    return render_template("list.html")
+        return redirect(url_for("list", user_id=user_id))
+    return render_template("list.html", user_id=user_id)
 
 
 # test
@@ -164,6 +168,7 @@ def list():
 @login_required
 def update():
     if request.method == "POST":
+        user_id = request.args.get("user_id")
         id = request.form["id"]
         # Güncellenen kaydı veritabanından al
         guncelle = Rehber.query.get(id)
@@ -172,11 +177,15 @@ def update():
             guncelle.soyad = request.form["soyad"]
             guncelle.numara = request.form["numara"]
             db.session.commit()
-            return redirect(url_for("list"))
+            return redirect(url_for("list", user_id=user_id))
             # return render_template('list.html',mesaj='kayıt başarıyla güncellendi')
         else:
-            return render_template("list.html", hata_mesaj="Kayıt bulunamadı")
-    return render_template("list.html")
+            return render_template(
+                "list.html",
+                hata_mesaj="Kayıt bulunamadı",
+                user_id=user_id,
+            )
+    return render_template("list.html", user_id=user_id)
 
 
 # adres  sayfası
@@ -224,8 +233,9 @@ def adres():
 # adres ekleme
 @app.route("/add_adres", methods=["POST"])
 def add_adres():
+    user_id = request.args.get("user_id")
     rehber_id = request.args.get("rehber_id")  # URL'den rehber_id parametresini al
-    print(rehber_id)
+    print(user_id)
     user = Rehber.query.filter_by(id=rehber_id).first()  # seçilen kullanıcıyı bul
 
     adres_adi = request.form["adres_adi"]
@@ -250,11 +260,11 @@ def add_adres():
             )
             db.session.add(yeni_adres)
             db.session.commit()
-            return redirect(url_for("adres", rehber_id=rehber_id))
+            return redirect(url_for("adres", rehber_id=rehber_id, user_id=user_id))
         else:
             error = " adresi kayıtlı"
-            return render_template("adres.html", error=error)
-    return redirect(url_for("adres"))
+            return render_template("adres.html", error=error, user_id=user_id)
+    return redirect(url_for("adres", user_id=user_id))
 
 
 # adres güncelleme sayfası
@@ -262,10 +272,10 @@ def add_adres():
 @login_required
 def updateAdres():
     if request.method == "POST":
+        user_id = request.args.get("user_id")
+        print(user_id)
         rehber_id = request.form["rehber_id"]
-        print(rehber_id)
         id = request.form["id"]
-        print(id)
 
         kayit = Adres.query.get(rehber_id)  # rehber id ve id den kayıt bulma
         if kayit:
@@ -275,15 +285,18 @@ def updateAdres():
             kayit.adres = request.form["adres"]
             kayit.mail = request.form["mail"]
             db.session.commit()
-        return redirect(url_for("adres", rehber_id=id))
+        return redirect(url_for("adres", rehber_id=id, user_id=user_id))
     else:
-        return render_template("adres.html", hata_mesaj="Kayıt bulunamadı")
+        return render_template(
+            "adres.html", hata_mesaj="Kayıt bulunamadı", user_id=user_id
+        )
 
 
 # adres silme sayfası
 @app.route("/deleteAdres", methods=["GET", "POST"])
 @login_required
 def deleteAdres():
+    user_id = request.args.get("user_id")
     rehber_id = request.args.get("id")  # URL'den rehber_id parametresini al
     print(rehber_id)
     if request.method == "POST":
@@ -294,8 +307,8 @@ def deleteAdres():
         if adressil is not None:
             db.session.delete(adressil)
             db.session.commit()
-            return redirect(url_for("adres", rehber_id=rehber_id))
-    return redirect(url_for("adres", rehber_id=rehber_id))
+            return redirect(url_for("adres", rehber_id=rehber_id, user_id=user_id))
+    return redirect(url_for("adres", rehber_id=rehber_id, user_id=user_id))
 
 
 # profil sayfası

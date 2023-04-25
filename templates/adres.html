@@ -185,7 +185,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="{{ url_for('deleteAdres',id=user.id) }}">
+                    <form method="post" action="{{ url_for('deleteAdres',id=user.id,user_id=user_id) }}">
                         <input type="hidden" id="deleteRehber_id" name="rehber_id">
                         <div class="form-group">
                             <label for="deleteAdres_adi">Adres Başlığı</label>
@@ -234,7 +234,7 @@
                     <!-- 
                             form actionda rehber id yi add_adres endpoint ine yolluyor
                           -->
-                    <form method="post" action="{{ url_for('add_adres',rehber_id=user.id) }}">
+                    <form method="post" action="{{ url_for('add_adres',rehber_id=user.id,user_id=user_id) }}">
                         <input type="hidden" id="rehber_id" name="id">
                         <div class="form-group">
                             <label for="addAdres">Adres Başlığı</label>
@@ -276,7 +276,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="{{ url_for('updateAdres') }}">
+                    <form method="post" action="{{ url_for('updateAdres',user_id=user_id) }}">
                         <input type="hidden" id="editUserId" name="id">
                         <input type="hidden" id="editUserRehber_Id" name="rehber_id">
                         <div class="form-group">
