@@ -70,7 +70,7 @@
 
     <h1>Kullanıcı Listesi</h1>
     <input type="text" id="adInput" placeholder="Adı Girin">
-    <ul id="list"></ul>
+
 
     <script>
         // Arama inputunu dinleme
@@ -112,7 +112,7 @@
 
 
 
-            <table class="table">
+            <table class="table" id="userTable">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -126,7 +126,7 @@
 
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="userList">
                     {% for user in users %}
                     <tr>
                         <td><input type="text" value="{{ user.id }}" id="id" name="id" class="form-control"
@@ -162,6 +162,37 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <!-- Ajax isteği -->
+            <script>
+                // Arama inputunu dinleme
+                $('#adInput').on('input', function () {
+                    var ad = $(this).val();
+                    // Arama sonuçlarını getirme
+                    $.ajax({
+                        url: '/arama',
+                        type: 'POST',
+                        data: { 'ad': ad },
+                        success: function (sonuclar) {
+                            // Sonuçları listeleme
+                            $('#userList').empty();
+                            if (sonuclar.length > 0) {
+                                $.each(sonuclar, function (index, user) {
+                                    var newRow = '<tr>' +
+                                        '<td><input type="text" value="' + user.id + '" id="id" name="id" class="form-control" style="width: auto;" readonly></td>' +
+                                        '<td><input type="text" value="' + user.ad + '" id="ad" name="ad" class="form-control" readonly></td>' +
+                                        '<td><input type="text" value="' + user.soyad + '" id="soyad" name="soyad" class="form-control" readonly></td>' +
+                                        '<td><input type="text" value="' + user.numara + '" id="numara" name="numara" class="form-control" readonly></td>' +
+                                        '<td></td>' + // Boş bir hücre eklemek isterseniz buraya kod ekleyebilirsiniz
+                                        '</tr>';
+                                    $('#userList').append(newRow);
+                                });
+                            } else {
+                                $('#userList').append('<tr><td colspan="5">Sonuç bulunamadı.</td></tr>');
+                            }
+                        }
+                    });
+                });
+            </script>
             <hr>
             <nav>
                 <ul>
