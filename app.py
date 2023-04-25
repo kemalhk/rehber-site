@@ -385,11 +385,16 @@ def arama():
                 Rehber.numara.like(f"%{arama_verisi}%"),
             )
         ).all()
+        adres_adi = Adres.query.filter(
+            or_(Adres.adres_adi.like(f"%{arama_verisi}%"))
+        ).all()
         # Rehber nesnesini JSON formatına dönüştürün
         sonuclar_json = [rehber.to_dict() for rehber in sonuclar]
+        # Rehber nesnesini JSON formatına dönüştürün
+        sonuclar_json.extend([adress.to_dict() for adress in adres_adi])
         for sonuc in sonuclar_json:
             sonuc["user_id"] = user_id
-        # Sonuçları JSON formatında döndürün
+
         # Sonuçları JSON formatında döndürün
         return jsonify(sonuclar_json)
 

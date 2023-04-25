@@ -156,10 +156,10 @@
                             if (sonuclar.length > 0) {
                                 $.each(sonuclar, function (index, user) {
                                     var newRow = '<tr>' +
-                                        '<td>' + user.id + '</td>' +
-                                        '<td>' + user.ad + '</td>' +
-                                        '<td>' + user.soyad + '</td>' +
-                                        '<td>' + user.numara + '</td>' +
+                                        '<td><input type="text" class="form-control"  style="width: auto;" readonly value="' + user.id + '"></td>' +
+                                        '<td><input type="text" class="form-control"  style="width: auto;" readonly value="' + user.ad + '"></td>' +
+                                        '<td><input type="text" class="form-control"  style="width: auto;" readonly value="' + user.soyad + '"></td>' +
+                                        '<td><input type="text" class=form-control style="width: auto;" readonly value="' + user.numara + '"></td>' +
                                         '<td><select class="form-select" aria-label="Default select example">';
                                     $.each(user.adresses, function (index, adress) {
                                         if (adress.adres_adi !== null && adress.adres_adi !== undefined) { // kontrol eklendi
