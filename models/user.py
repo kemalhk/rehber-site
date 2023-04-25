@@ -10,6 +10,7 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
     authenticated = db.Column(db.Boolean, default=False)
+    rehber_ekleyen = db.relationship("Rehber", backref="Rehber", lazy=True)
 
     def is_active(self):
         """True, as all users are active."""
@@ -33,14 +34,15 @@ class Rehber(db.Model):
     ad = db.Column(db.String(50), nullable=False)
     soyad = db.Column(db.String(50), nullable=False)
     numara = db.Column(db.String(50), unique=True, nullable=False)
+    ekleyen_user = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     adresses = db.relationship("Adres", backref="Rehber", lazy=True)
 
 
 class Adres(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     mail = db.Column(db.String(120), unique=True, nullable=False)
-    adres_adi=db.Column(db.String(30),nullable=False)
-    il=db.Column(db.String(20),nullable=False)
-    ilce=db.Column(db.String(25),nullable=False)
-    adres=db.Column(db.String(90),nullable=False) 
+    adres_adi = db.Column(db.String(30), nullable=False)
+    il = db.Column(db.String(20), nullable=False)
+    ilce = db.Column(db.String(25), nullable=False)
+    adres = db.Column(db.String(90), nullable=False)
     rehber_id = db.Column(db.Integer, db.ForeignKey("rehber.id"), nullable=False)
