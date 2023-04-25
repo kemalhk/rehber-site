@@ -1,8 +1,15 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, relationship
+from dataclasses import dataclass
 
 
 db = SQLAlchemy()
+
+
+@dataclass
+class TestModel:
+    rehberler: any
+    adresler: any
 
 
 class User(db.Model):

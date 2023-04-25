@@ -11,7 +11,7 @@ from flask import (
 
 from flask import jsonify
 from flask_sqlalchemy import SQLAlchemy
-from .models.user import User, db, Rehber, Adres
+from .models.user import User, db, Rehber, Adres, TestModel
 from flask_paginate import Pagination, get_page_parameter, get_page_args
 from http import HTTPStatus
 import math
@@ -383,10 +383,7 @@ def profilsifre():
 def arama():
     if request.method == "POST":
         user_id = session.get("user_id")
-        users = Rehber.query.filter(Rehber.ekleyen_user == user_id).all()
-        addresses = Adres.query.filter(Adres.rehber_id == user_id).all()
 
-        addresses = Adres.query.all()
         arama_verisi = request.form["ad"]  # Gelen ad değerini alın
         # Veritabanında ad değerine göre arama yapın ve sonuçları alın
         # sonuclar = Rehber.query.filter_by(ad=ad).all()
@@ -398,42 +395,19 @@ def arama():
                 Rehber.numara.like(f"%{arama_verisi}%"),
             )
         ).all()
-        """ adres_adi = Adres.query.filter(
+        adres_adi = Adres.query.filter(
             or_(Adres.adres_adi.like(f"%{arama_verisi}%")),
-        ).all() """
+        ).all()
         # Rehber nesnesini JSON formatına dönüştürün
-        sonuclar_json = [rehber.to_dict() for rehber in sonuclar]
+        rehberler = [rehber.to_dict() for rehber in sonuclar]
         # Rehber nesnesini JSON formatına dönüştürün
-        """ sonuclar_json.extend([adress.to_dict() for adress in adres_adi]) """
-        for sonuc in sonuclar_json:
+        adresler = [adress.to_dict() for adress in adres_adi]
+
+        for sonuc in rehberler:
             sonuc["user_id"] = user_id
-
+        testmodel = TestModel(rehberler, adresler)
         # Sonuçları JSON formatında döndürün
-        return jsonify(sonuclar_json)
-
-        """ # Sonuçları HTML formatında döndürmek için bir HTML string oluşturun
-        html_string = "<html><body>"
-        for rehber in sonuclar:
-            html_string += "<p>Ad: {}</p>".format(rehber.ad)
-
-        html_string += "</body></html>"
-
-        # Sonuçları HTML formatında döndürün
-        return html_string """
-        """ # Sonuçları HTML formatında döndürmek için bir HTML string oluşturun
-        html_string = "<html><body>"
-        for rehber in sonuclar:
-            html_string += "<p>Ad: {}</p>".format(rehber.ad)
-            html_string += "<p>Telefon: {}</p>".format(rehber.telefon)
-        html_string += "</body></html>"
-
-        # Sonuçları HTML formatında döndürün
-        return Response(html_string, content_type="text/html") """
-
-        """ return render_template(
-            "adres.html",
-            sonuclar=sonuclar or [],  # [] adres boş geliyorsa listeleme için
-        ) """
+        return jsonify(testmodel)
 
 
 # sayfa içi arama kısımı
