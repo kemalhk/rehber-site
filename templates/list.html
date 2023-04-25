@@ -156,6 +156,7 @@
                             debugger
                             if (sonuclar?.rehberler?.length) {
                                 $.each(sonuclar.rehberler, function (index, user) {
+
                                     var newRow = '<tr>' +
                                         '<td><input type="text" class="form-control"  style="width: auto;" readonly value="' + user.id + '"></td>' +
                                         '<td><input type="text" class="form-control"  style="width: auto;" readonly value="' + user.ad + '"></td>' +
@@ -164,6 +165,7 @@
                                         '<td><select class="form-select" aria-label="Default select example">';
 
                                     $.each(sonuclar.adresler.filter(x => x.rehber_id == user.id), function (index, adress) {
+
 
                                         newRow += '<option value="' + adress.adres_adi + '">' + adress.adres_adi + '</option>';
 
